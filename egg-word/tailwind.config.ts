@@ -75,6 +75,15 @@ export default {
           800: '#2d302f',
           900: '#1a1c1b',
         },
+        // フランス風・北欧風のくすみカラー
+        nordic: {
+          bg: '#CBCBBD',      // さらに濃いオフホワイト背景（2倍濃く）
+          text: '#333333',     // 濃いグレー文字
+          input: '#E6E0DA',    // グレージュ入力欄
+          orange: '#FF7B54',   // くすみオレンジボタン
+          mustard: '#D4A017',  // マスタードhover
+          olive: '#4A5D23',    // こいオリーブ（名言エリア用）
+        },
         tricolore: {
           blue: {
             50: '#eff6ff',
