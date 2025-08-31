@@ -136,33 +136,36 @@ export default function Home() {
   return (
     <main className="min-h-screen flex flex-col items-center bg-feminine-bg" style={{minHeight: '100vh'}}>
       <div className="flex-1 w-full flex flex-col items-center">
-        <nav className="w-full flex justify-center border-b border-gray-200/30 h-16 bg-white/70 backdrop-blur-sm">
-          <div className="w-full max-w-4xl flex justify-between items-center p-3 px-5 text-sm">
-            <div className="flex gap-5 items-center font-medium">
-              <Link href={"/"} className="text-feminine-text hover:text-feminine-pink transition-colors">エッグさん名言ジェネレーター</Link>
+        <nav className="w-full flex justify-center border-b border-gray-200/30 h-14 sm:h-16 bg-white/70 backdrop-blur-sm">
+          <div className="w-full max-w-4xl flex justify-between items-center p-2 px-3 sm:p-3 sm:px-5 text-xs sm:text-sm">
+            <div className="flex gap-3 sm:gap-5 items-center font-medium">
+              <Link href={"/"} className="text-feminine-text hover:text-feminine-pink transition-colors truncate">
+                <span className="block sm:hidden">エッグさん</span>
+                <span className="hidden sm:block">エッグさん名言ジェネレーター</span>
+              </Link>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-4">
               <ThemeSwitcher />
             </div>
           </div>
         </nav>
 
-        <div className="flex-1 flex flex-col items-center justify-center max-w-4xl p-4 md:p-6 lg:p-8 w-full">
+        <div className="flex-1 flex flex-col items-center justify-center max-w-4xl p-3 sm:p-4 md:p-6 lg:p-8 w-full">
           {/* メインアプリカード */}
-          <div className="bg-white rounded-lg px-4 py-4 md:px-8 md:py-5 lg:px-12 lg:py-6 w-full max-w-3xl">
+          <div className="bg-white rounded-lg px-3 py-3 sm:px-4 sm:py-4 md:px-8 md:py-5 lg:px-12 lg:py-6 w-full max-w-3xl">
             {/* メイン生成エリア */}
-            <div className="w-full space-y-8">
+            <div className="w-full space-y-6 sm:space-y-8">
             {/* タイトル */}
             <motion.div 
-              className="text-center space-y-2 mt-8"
+              className="text-center space-y-2 mt-4 sm:mt-8"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <h1 className="text-2xl md:text-3xl font-sans font-bold text-feminine-pink">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-sans font-bold text-feminine-pink">
                 エッグさん名言ジェネレーター
               </h1>
-              <p className="text-feminine-text/70 leading-relaxed font-sans">
+              <p className="text-sm sm:text-base text-feminine-text/70 leading-relaxed font-sans px-2 sm:px-0">
                 あなたのモヤモヤを言葉に。エッグさんが答えを置いていきます
               </p>
             </motion.div>
@@ -172,7 +175,7 @@ export default function Home() {
               {(isLoading || quote !== "エッグさんの殻の中") && (
                 <motion.div 
                   ref={quoteRef}
-                  className="rounded-lg px-4 py-12 md:px-8 md:py-14 lg:px-12 lg:py-16 min-h-[280px] md:min-h-[300px] lg:min-h-[320px] flex flex-col justify-between relative"
+                  className="rounded-lg px-3 py-8 sm:px-4 sm:py-12 md:px-8 md:py-14 lg:px-12 lg:py-16 min-h-[240px] sm:min-h-[280px] md:min-h-[300px] lg:min-h-[320px] flex flex-col justify-between relative"
                   initial={{ opacity: 0, y: 30, scale: 0.95, backgroundColor: "#ffffff" }}
                   animate={{ 
                     opacity: 1, 
@@ -212,14 +215,14 @@ export default function Home() {
                 ) : (
                   <AnimatePresence mode="wait">
                     <motion.div 
-                      className="w-full px-4 pr-20 md:px-8 md:pr-24 lg:px-12 lg:pr-32"
+                      className="w-full px-2 pr-16 sm:px-4 sm:pr-20 md:px-8 md:pr-24 lg:px-12 lg:pr-32"
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -20 }}
                       transition={{ duration: 0.5 }}
                       key={quote}
                     >
-                      <p className="text-lg md:text-xl lg:text-2xl text-left leading-relaxed whitespace-pre-line font-sans text-white" style={{wordBreak: 'keep-all', overflowWrap: 'break-word', lineHeight: '1.8', hangingPunctuation: 'force-end'}}>
+                      <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-left leading-relaxed whitespace-pre-line font-sans text-white" style={{wordBreak: 'keep-all', overflowWrap: 'break-word', lineHeight: '1.8', hangingPunctuation: 'force-end'}}>
                         {convertText(formatQuoteText(quote))}
                       </p>
                     </motion.div>
@@ -231,7 +234,7 @@ export default function Home() {
               <AnimatePresence>
                 {quote !== "エッグさんの殻の中" && !isLoading && !error && (
                   <motion.div 
-                    className="absolute bottom-4 right-4 w-20 h-20 md:bottom-6 md:right-6 md:w-28 md:h-28 lg:w-32 lg:h-32"
+                    className="absolute bottom-2 right-2 w-16 h-16 sm:bottom-4 sm:right-4 sm:w-20 sm:h-20 md:bottom-6 md:right-6 md:w-28 md:h-28 lg:w-32 lg:h-32"
                     initial={{ opacity: 0, scale: 0.5, rotate: -10 }}
                     animate={{ opacity: 1, scale: 1, rotate: 0 }}
                     exit={{ opacity: 0, scale: 0.5 }}
@@ -256,7 +259,7 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <label htmlFor="input-text" className="block text-sm font-medium text-feminine-text text-center">
+              <label htmlFor="input-text" className="block text-xs sm:text-sm font-medium text-feminine-text text-center px-2">
                 愚痴・悩み・つぶやきを入力してみて🥚
               </label>
               <textarea
@@ -264,7 +267,7 @@ export default function Home() {
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 placeholder="例：今日も仕事でイライラしてしまった..."
-                className="w-full p-3 bg-feminine-input border-none rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-feminine-pink focus:ring-opacity-50 transition-all duration-200 font-sans text-feminine-text placeholder-feminine-text placeholder-opacity-50"
+                className="w-full p-2 sm:p-3 bg-feminine-input border-none rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-feminine-pink focus:ring-opacity-50 transition-all duration-200 font-sans text-feminine-text placeholder-feminine-text placeholder-opacity-50 text-sm sm:text-base"
                 rows={3}
                 maxLength={200}
               />
@@ -286,7 +289,7 @@ export default function Home() {
                   <button 
                     onClick={() => generateQuote()}
                     disabled={inputText.trim().length === 0}
-                    className="bg-feminine-pink hover:bg-feminine-pink-hover text-white font-medium py-3 px-6 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-feminine-pink focus:ring-opacity-50 disabled:cursor-not-allowed font-sans"
+                    className="bg-feminine-pink hover:bg-feminine-pink-hover text-white font-medium py-2 px-4 sm:py-3 sm:px-6 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-feminine-pink focus:ring-opacity-50 disabled:cursor-not-allowed font-sans text-sm sm:text-base"
                   >
                     エッグさんに愚痴る
                   </button>
@@ -298,7 +301,7 @@ export default function Home() {
             <AnimatePresence>
               {quote !== "エッグさんの殻の中" && !isLoading && !error && (
                 <motion.div 
-                  className="text-center mt-8"
+                  className="text-center mt-6 sm:mt-8"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
@@ -310,7 +313,7 @@ export default function Home() {
                       setInputText("");
                       setError("");
                     }}
-                    className="bg-feminine-pink hover:bg-feminine-pink-hover text-white font-medium py-3 px-6 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-feminine-pink focus:ring-opacity-50 font-sans"
+                    className="bg-feminine-pink hover:bg-feminine-pink-hover text-white font-medium py-2 px-4 sm:py-3 sm:px-6 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-feminine-pink focus:ring-opacity-50 font-sans text-sm sm:text-base"
                   >
                     もっとエッグさんに愚痴る
                   </button>
@@ -322,12 +325,12 @@ export default function Home() {
         </div>
 
         <motion.footer 
-          className="w-full flex items-center justify-center border-t border-gray-200/30 mx-auto text-center text-xs gap-8 py-8 bg-white/50 backdrop-blur-sm"
+          className="w-full flex items-center justify-center border-t border-gray-200/30 mx-auto text-center text-xs gap-4 sm:gap-8 py-4 sm:py-8 bg-white/50 backdrop-blur-sm"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 1 }}
         >
-          <p className="text-feminine-text/60 font-sans">
+          <p className="text-feminine-text/60 font-sans text-xs">
             © 2025 leSoleil · egg-quote.app
           </p>
         </motion.footer>
