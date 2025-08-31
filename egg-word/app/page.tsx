@@ -162,11 +162,11 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-sans font-bold text-feminine-pink">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-sans font-bold text-feminine-pink whitespace-nowrap">
                 エッグさん名言ジェネレーター
               </h1>
               <p className="text-sm sm:text-base text-feminine-text/70 leading-relaxed font-sans px-2 sm:px-0">
-                あなたのモヤモヤを言葉に。エッグさんが答えを置いていきます
+                あなたのモヤモヤを言葉に。<br className="block sm:hidden" />エッグさんが答えを置いていきます
               </p>
             </motion.div>
 
