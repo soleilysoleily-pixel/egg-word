@@ -166,7 +166,7 @@ export default function Home() {
                 エッグさん名言ジェネレーター
               </h1>
               <p className="text-sm sm:text-base text-feminine-text/70 leading-relaxed font-sans px-2 sm:px-0">
-                あなたのモヤモヤを言葉に。<br className="block sm:hidden" />エッグさんが答えを置いていきます
+                あなたのモヤモヤを言葉に。<br className="block md:hidden" />エッグさんが答えを置いていきます
               </p>
             </motion.div>
 
@@ -215,7 +215,7 @@ export default function Home() {
                 ) : (
                   <AnimatePresence mode="wait">
                     <motion.div 
-                      className="w-full px-2 pr-16 sm:px-4 sm:pr-20 md:px-8 md:pr-24 lg:px-12 lg:pr-32"
+                      className="w-full px-3 pb-20 sm:px-4 sm:pr-20 sm:pb-0 md:px-8 md:pr-24 lg:px-12 lg:pr-32"
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -20 }}
