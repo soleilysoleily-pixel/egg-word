@@ -84,6 +84,19 @@ export default {
           mustard: '#D4A017',  // マスタードhover
           olive: '#4A5D23',    // こいオリーブ（名言エリア用）
         },
+        // 2〜30代女性向けくすみカラーパレット
+        feminine: {
+          bg: '#EDAEA2',       // 暖かいベージュ背景
+          card: '#FFFFFF',     // カード背景（白）
+          text: '#2C2C2C',     // 濃いグレー文字（コントラスト向上）
+          input: '#F0EAE6',    // 薄いくすみベージュ入力欄
+          pink: '#8A4D52',     // さらに濃いくすみピンク（メインボタン用）
+          'pink-hover': '#76424A', // ピンクhover用（さらに濃く）
+          rose: '#A66B75',     // より濃いくすみローズ（ボタン用）
+          'rose-hover': '#8F5A63', // ローズhover用
+          blue: '#A8C4D4',     // ソフトくすみブルー
+          olive: '#8B9A6B',    // やわらかいオリーブ（名言エリア用）
+        },
         tricolore: {
           blue: {
             50: '#eff6ff',
