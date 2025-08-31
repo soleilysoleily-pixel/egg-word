@@ -10,8 +10,14 @@ export default function Home() {
   const [inputText, setInputText] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
+  const [currentImage, setCurrentImage] = useState<number>(1); // 1 or 2 for alternating images
   const quoteRef = useRef<HTMLDivElement>(null);
   
+
+  // 文字変換処理
+  const convertText = (text: string) => {
+    return text.replace(/私/g, 'わたし');
+  };
 
   // エッグのイラストに重ならない部分での改行調整
   const formatQuoteText = (text: string) => {
@@ -89,6 +95,12 @@ export default function Home() {
       
       if (data.success) {
         setQuote(data.text);
+        // 画像を交互に切り替え
+        setCurrentImage(prev => {
+          const newImage = prev === 1 ? 2 : 1;
+          console.log('Image switching:', prev, '->', newImage);
+          return newImage;
+        });
       } else {
         throw new Error(data.error || 'エラーが発生しました');
       }
@@ -207,8 +219,8 @@ export default function Home() {
                       transition={{ duration: 0.5 }}
                       key={quote}
                     >
-                      <p className="text-2xl text-left leading-relaxed whitespace-pre-line font-sans text-white" style={{wordBreak: 'keep-all', overflowWrap: 'break-word', lineHeight: '2.0', hangingPunctuation: 'force-end', textAlign: 'justify', textJustify: 'inter-character'}}>
-                        {formatQuoteText(quote)}
+                      <p className="text-2xl text-left leading-relaxed whitespace-pre-line font-sans text-white" style={{wordBreak: 'keep-all', overflowWrap: 'break-word', lineHeight: '2.0', hangingPunctuation: 'force-end'}}>
+                        {convertText(formatQuoteText(quote))}
                       </p>
                     </motion.div>
                   </AnimatePresence>
@@ -226,7 +238,7 @@ export default function Home() {
                     transition={{ duration: 0.4, delay: 0.3, type: "spring", stiffness: 200 }}
                   >
                     <img 
-                      src="/images/egg-character.png" 
+                      src={`/images/egg-character${currentImage}.png`} 
                       alt="エッグさん" 
                       className="w-full h-full object-contain drop-shadow-sm"
                     />
