@@ -147,9 +147,9 @@ export default function Home() {
           </div>
         </nav>
 
-        <div className="flex-1 flex flex-col items-center justify-center max-w-4xl p-8 w-full">
+        <div className="flex-1 flex flex-col items-center justify-center max-w-4xl p-4 md:p-6 lg:p-8 w-full">
           {/* メインアプリカード */}
-          <div className="bg-white rounded-lg px-12 py-6 w-full max-w-3xl">
+          <div className="bg-white rounded-lg px-4 py-4 md:px-8 md:py-5 lg:px-12 lg:py-6 w-full max-w-3xl">
             {/* メイン生成エリア */}
             <div className="w-full space-y-8">
             {/* タイトル */}
@@ -159,7 +159,7 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <h1 className="text-3xl font-sans font-bold text-feminine-pink">
+              <h1 className="text-2xl md:text-3xl font-sans font-bold text-feminine-pink">
                 エッグさん名言ジェネレーター
               </h1>
               <p className="text-feminine-text/70 leading-relaxed font-sans">
@@ -172,7 +172,7 @@ export default function Home() {
               {(isLoading || quote !== "エッグさんの殻の中") && (
                 <motion.div 
                   ref={quoteRef}
-                  className="rounded-lg px-12 py-16 min-h-[320px] flex flex-col justify-between relative"
+                  className="rounded-lg px-4 py-12 md:px-8 md:py-14 lg:px-12 lg:py-16 min-h-[280px] md:min-h-[300px] lg:min-h-[320px] flex flex-col justify-between relative"
                   initial={{ opacity: 0, y: 30, scale: 0.95, backgroundColor: "#ffffff" }}
                   animate={{ 
                     opacity: 1, 
@@ -212,14 +212,14 @@ export default function Home() {
                 ) : (
                   <AnimatePresence mode="wait">
                     <motion.div 
-                      className="w-full px-12 pr-32"
+                      className="w-full px-4 pr-20 md:px-8 md:pr-24 lg:px-12 lg:pr-32"
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -20 }}
                       transition={{ duration: 0.5 }}
                       key={quote}
                     >
-                      <p className="text-2xl text-left leading-relaxed whitespace-pre-line font-sans text-white" style={{wordBreak: 'keep-all', overflowWrap: 'break-word', lineHeight: '2.0', hangingPunctuation: 'force-end'}}>
+                      <p className="text-lg md:text-xl lg:text-2xl text-left leading-relaxed whitespace-pre-line font-sans text-white" style={{wordBreak: 'keep-all', overflowWrap: 'break-word', lineHeight: '1.8', hangingPunctuation: 'force-end'}}>
                         {convertText(formatQuoteText(quote))}
                       </p>
                     </motion.div>
@@ -231,7 +231,7 @@ export default function Home() {
               <AnimatePresence>
                 {quote !== "エッグさんの殻の中" && !isLoading && !error && (
                   <motion.div 
-                    className="absolute bottom-6 right-6 w-32 h-32"
+                    className="absolute bottom-4 right-4 w-20 h-20 md:bottom-6 md:right-6 md:w-28 md:h-28 lg:w-32 lg:h-32"
                     initial={{ opacity: 0, scale: 0.5, rotate: -10 }}
                     animate={{ opacity: 1, scale: 1, rotate: 0 }}
                     exit={{ opacity: 0, scale: 0.5 }}
