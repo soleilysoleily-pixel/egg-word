@@ -105,6 +105,7 @@ export default function Home() {
         
         // レスポンスしたキャラクターを記録
         setRespondedCharacter(characterToUse);
+        console.log('Response character set to:', characterToUse);
         
         // 現在のキャラクター（レスポンスしたキャラクター）に応じた表示設定
         if (characterToUse === 'egg') {
@@ -267,7 +268,11 @@ export default function Home() {
                     transition={{ duration: 0.4, delay: 0.3, type: "spring", stiffness: 200 }}
                   >
                     <img 
-                      src={respondedCharacter === 'egg' ? `/images/egg-character${currentImage}.png` : '/images/ufuufu-character1.png'} 
+                      src={(() => {
+                        const imageSrc = respondedCharacter === 'egg' ? `/images/egg-character${currentImage}.png` : '/images/ufuufu-character1.png';
+                        console.log('Image display - respondedCharacter:', respondedCharacter, ', imageSrc:', imageSrc);
+                        return imageSrc;
+                      })()}
                       alt={respondedCharacter === 'egg' ? 'エッグさん' : 'ウフウフ'} 
                       className="w-full h-full object-contain drop-shadow-sm"
                     />
@@ -338,6 +343,10 @@ export default function Home() {
                       setQuote("エッグさんの殻の中");
                       setInputText("");
                       setError("");
+                      // キャラクター状態をリセット（初回はエッグさんから開始）
+                      setNextCharacter('egg');
+                      setRespondedCharacter('egg');
+                      console.log('Reset - characters set to egg');
                     }}
                     className="bg-feminine-pink hover:bg-feminine-pink-hover text-white font-medium py-2 px-4 sm:py-3 sm:px-6 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-feminine-pink focus:ring-opacity-50 font-sans text-sm sm:text-base"
                   >
