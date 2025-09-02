@@ -10,7 +10,7 @@ export default function Home() {
   const [inputText, setInputText] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-  const [currentCharacter, setCurrentCharacter] = useState<'egg' | 'ufuufu'>('egg'); // キャラクター交互切り替え
+  const [displayCharacter, setDisplayCharacter] = useState<'egg' | 'ufuufu'>('egg'); // 表示中キャラクター
   const [currentImage, setCurrentImage] = useState<number>(1); // 1 or 2 for alternating images
   const [ufuufuBgColor, setUfuufuBgColor] = useState<string>('#FFE4E1'); // ウフウフ背景色
   const quoteRef = useRef<HTMLDivElement>(null);
@@ -73,6 +73,29 @@ export default function Home() {
     setIsLoading(true);
     setError("");
     
+    // 今回使用するキャラクターを決定
+    const characterToUse = displayCharacter;
+    
+    // 次回用にキャラクターを切り替え
+    const nextCharacter = displayCharacter === 'egg' ? 'ufuufu' : 'egg';
+    console.log('Character using this time:', characterToUse, ', next will be:', nextCharacter);
+    
+    // 現在のキャラクターに応じた設定
+    if (characterToUse === 'egg') {
+      // エッグさん用：画像を交互に切り替え
+      setCurrentImage(prev => {
+        const newImage = prev === 1 ? 2 : 1;
+        console.log('Egg image switching:', prev, '->', newImage);
+        return newImage;
+      });
+    } else {
+      // ウフウフ用：背景色をランダム選択
+      const ufuufuColors = ['#FFE4E1', '#EBDCF9', '#DFFFFEA'];
+      const randomColor = ufuufuColors[Math.floor(Math.random() * ufuufuColors.length)];
+      setUfuufuBgColor(randomColor);
+      console.log('Ufuufu bg color:', randomColor);
+    }
+    
     try {
       // タイムアウト設定（7秒）
       const controller = new AbortController();
@@ -83,7 +106,7 @@ export default function Home() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ inputText, character: currentCharacter }),
+        body: JSON.stringify({ inputText, character: characterToUse }),
         signal: controller.signal
       });
       
@@ -98,29 +121,8 @@ export default function Home() {
       if (data.success) {
         setQuote(data.text);
         
-        // キャラクターを交互に切り替え
-        setCurrentCharacter(prev => {
-          const newChar = prev === 'egg' ? 'ufuufu' : 'egg';
-          console.log('Character switching:', prev, '->', newChar);
-          return newChar;
-        });
-        
-        // エッグさん用：画像を交互に切り替え
-        if (currentCharacter === 'egg') {
-          setCurrentImage(prev => {
-            const newImage = prev === 1 ? 2 : 1;
-            console.log('Egg image switching:', prev, '->', newImage);
-            return newImage;
-          });
-        }
-        
-        // ウフウフ用：背景色をランダム選択
-        if (currentCharacter === 'ufuufu') {
-          const ufuufuColors = ['#FFE4E1', '#EBDCF9', '#DFFFFEA'];
-          const randomColor = ufuufuColors[Math.floor(Math.random() * ufuufuColors.length)];
-          setUfuufuBgColor(randomColor);
-          console.log('Ufuufu bg color:', randomColor);
-        }
+        // 成功後に次回用キャラクターを設定
+        setDisplayCharacter(nextCharacter);
       } else {
         throw new Error(data.error || 'エラーが発生しました');
       }
@@ -186,7 +188,7 @@ export default function Home() {
                 エッグさん名言ジェネレーター
               </h1>
               <p className="text-sm sm:text-base text-feminine-text/70 leading-relaxed font-sans px-2 sm:px-0">
-                あなたのモヤモヤを言葉に。<br className="block md:hidden" />エッグさんが答えを置いていきます
+                あなたのもやもやを言葉に。<br className="block md:hidden" />エッグさんとなかまたちが答えます
               </p>
             </motion.div>
 
@@ -202,7 +204,7 @@ export default function Home() {
                     y: 0, 
                     scale: 1,
                     backgroundColor: isLoading ? "#ffffff" : 
-                      (currentCharacter === 'ufuufu' ? ufuufuBgColor : "rgba(139, 154, 107, 0.9)") // ウフウフはランダム色、エッグさんはオリーブ色
+                      (displayCharacter === 'ufuufu' ? ufuufuBgColor : "rgba(139, 154, 107, 0.9)") // ウフウフならランダム色、エッグさんならオリーブ色
                   }}
                   exit={{ opacity: 0, y: -30, scale: 0.95 }}
                   transition={{ 
@@ -221,7 +223,7 @@ export default function Home() {
                     exit={{ opacity: 0 }}
                   >
                     <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-feminine-pink"></div>
-                    <p className="text-feminine-text/60 text-sm font-medium">エッグさんが考え中...</p>
+                    <p className="text-feminine-text/60 text-sm font-medium">考え中</p>
                   </motion.div>
                 ) : error ? (
                   <motion.div 
@@ -243,7 +245,7 @@ export default function Home() {
                       transition={{ duration: 0.5 }}
                       key={quote}
                     >
-                      <p className={`text-base sm:text-lg md:text-xl lg:text-2xl text-left leading-relaxed whitespace-pre-line font-sans ${currentCharacter === 'ufuufu' ? 'text-[#444]' : 'text-white'}`} style={{wordBreak: 'keep-all', overflowWrap: 'break-word', lineHeight: '1.8', hangingPunctuation: 'force-end'}}>
+                      <p className={`text-base sm:text-lg md:text-xl lg:text-2xl text-left leading-relaxed whitespace-pre-line font-sans ${displayCharacter === 'ufuufu' ? 'text-[#444]' : 'text-white'}`} style={{wordBreak: 'keep-all', overflowWrap: 'break-word', lineHeight: '1.8', hangingPunctuation: 'force-end'}}>
                         {convertText(formatQuoteText(quote))}
                       </p>
                     </motion.div>
@@ -262,8 +264,8 @@ export default function Home() {
                     transition={{ duration: 0.4, delay: 0.3, type: "spring", stiffness: 200 }}
                   >
                     <img 
-                      src={currentCharacter === 'ufuufu' ? '/images/ufuufu-character1.png' : `/images/egg-character${currentImage}.png`} 
-                      alt={currentCharacter === 'ufuufu' ? 'ウフウフ' : 'エッグさん'} 
+                      src={displayCharacter === 'ufuufu' ? '/images/ufuufu-character1.png' : `/images/egg-character${currentImage}.png`} 
+                      alt={displayCharacter === 'ufuufu' ? 'ウフウフ' : 'エッグさん'} 
                       className="w-full h-full object-contain drop-shadow-sm"
                     />
                   </motion.div>
@@ -312,7 +314,7 @@ export default function Home() {
                     disabled={inputText.trim().length === 0}
                     className="bg-feminine-pink hover:bg-feminine-pink-hover text-white font-medium py-2 px-4 sm:py-3 sm:px-6 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-feminine-pink focus:ring-opacity-50 disabled:cursor-not-allowed font-sans text-sm sm:text-base"
                   >
-                    愚痴るに
+                    愚痴る
                   </button>
                 </motion.div>
               )}
@@ -336,7 +338,7 @@ export default function Home() {
                     }}
                     className="bg-feminine-pink hover:bg-feminine-pink-hover text-white font-medium py-2 px-4 sm:py-3 sm:px-6 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-feminine-pink focus:ring-opacity-50 font-sans text-sm sm:text-base"
                   >
-                    もっと愚痴るに
+                    もっと愚痴る
                   </button>
                 </motion.div>
               )}
