@@ -10,7 +10,8 @@ export default function Home() {
   const [inputText, setInputText] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-  const [displayCharacter, setDisplayCharacter] = useState<'egg' | 'ufuufu'>('egg'); // 表示中キャラクター
+  const [nextCharacter, setNextCharacter] = useState<'egg' | 'ufuufu'>('egg'); // 次に使用するキャラクター
+  const [respondedCharacter, setRespondedCharacter] = useState<'egg' | 'ufuufu'>('egg'); // 現在表示されているレスポンスをしたキャラクター
   const [currentImage, setCurrentImage] = useState<number>(1); // 1 or 2 for alternating images
   const [ufuufuBgColor, setUfuufuBgColor] = useState<string>('#FFE4E1'); // ウフウフ背景色
   const quoteRef = useRef<HTMLDivElement>(null);
@@ -74,27 +75,8 @@ export default function Home() {
     setError("");
     
     // 今回使用するキャラクターを決定
-    const characterToUse = displayCharacter;
-    
-    // 次回用にキャラクターを切り替え
-    const nextCharacter = displayCharacter === 'egg' ? 'ufuufu' : 'egg';
-    console.log('Character using this time:', characterToUse, ', next will be:', nextCharacter);
-    
-    // 現在のキャラクターに応じた設定
-    if (characterToUse === 'egg') {
-      // エッグさん用：画像を交互に切り替え
-      setCurrentImage(prev => {
-        const newImage = prev === 1 ? 2 : 1;
-        console.log('Egg image switching:', prev, '->', newImage);
-        return newImage;
-      });
-    } else {
-      // ウフウフ用：背景色をランダム選択
-      const ufuufuColors = ['#FFE4E1', '#EBDCF9', '#DFFFFEA'];
-      const randomColor = ufuufuColors[Math.floor(Math.random() * ufuufuColors.length)];
-      setUfuufuBgColor(randomColor);
-      console.log('Ufuufu bg color:', randomColor);
-    }
+    const characterToUse = nextCharacter;
+    console.log('Character using this time:', characterToUse);
     
     try {
       // タイムアウト設定（7秒）
@@ -121,8 +103,29 @@ export default function Home() {
       if (data.success) {
         setQuote(data.text);
         
-        // 成功後に次回用キャラクターを設定
-        setDisplayCharacter(nextCharacter);
+        // レスポンスしたキャラクターを記録
+        setRespondedCharacter(characterToUse);
+        
+        // 現在のキャラクター（レスポンスしたキャラクター）に応じた表示設定
+        if (characterToUse === 'egg') {
+          // エッグさん用：画像を交互に切り替え
+          setCurrentImage(prev => {
+            const newImage = prev === 1 ? 2 : 1;
+            console.log('Egg image switching:', prev, '->', newImage);
+            return newImage;
+          });
+        } else {
+          // ウフウフ用：背景色をランダム選択
+          const ufuufuColors = ['#FFE4E1', '#EBDCF9', '#DFFFFEA'];
+          const randomColor = ufuufuColors[Math.floor(Math.random() * ufuufuColors.length)];
+          setUfuufuBgColor(randomColor);
+          console.log('Ufuufu bg color:', randomColor);
+        }
+        
+        // 次回用にキャラクターを切り替え
+        const newNextCharacter = characterToUse === 'egg' ? 'ufuufu' : 'egg';
+        setNextCharacter(newNextCharacter);
+        console.log('Next character will be:', newNextCharacter);
       } else {
         throw new Error(data.error || 'エラーが発生しました');
       }
@@ -204,7 +207,7 @@ export default function Home() {
                     y: 0, 
                     scale: 1,
                     backgroundColor: isLoading ? "#ffffff" : 
-                      (displayCharacter === 'ufuufu' ? ufuufuBgColor : "rgba(139, 154, 107, 0.9)") // ウフウフならランダム色、エッグさんならオリーブ色
+                      (respondedCharacter === 'egg' ? "rgba(139, 154, 107, 0.9)" : ufuufuBgColor) // エッグさんならオリーブ色、ウフウフならランダム色
                   }}
                   exit={{ opacity: 0, y: -30, scale: 0.95 }}
                   transition={{ 
@@ -245,7 +248,7 @@ export default function Home() {
                       transition={{ duration: 0.5 }}
                       key={quote}
                     >
-                      <p className={`text-base sm:text-lg md:text-xl lg:text-2xl text-left leading-relaxed whitespace-pre-line font-sans ${displayCharacter === 'ufuufu' ? 'text-[#444]' : 'text-white'}`} style={{wordBreak: 'keep-all', overflowWrap: 'break-word', lineHeight: '1.8', hangingPunctuation: 'force-end'}}>
+                      <p className={`text-base sm:text-lg md:text-xl lg:text-2xl text-left leading-relaxed whitespace-pre-line font-sans ${respondedCharacter === 'egg' ? 'text-white' : 'text-[#444]'}`} style={{wordBreak: 'keep-all', overflowWrap: 'break-word', lineHeight: '1.8', hangingPunctuation: 'force-end'}}>
                         {convertText(formatQuoteText(quote))}
                       </p>
                     </motion.div>
@@ -264,8 +267,8 @@ export default function Home() {
                     transition={{ duration: 0.4, delay: 0.3, type: "spring", stiffness: 200 }}
                   >
                     <img 
-                      src={displayCharacter === 'ufuufu' ? '/images/ufuufu-character1.png' : `/images/egg-character${currentImage}.png`} 
-                      alt={displayCharacter === 'ufuufu' ? 'ウフウフ' : 'エッグさん'} 
+                      src={respondedCharacter === 'egg' ? `/images/egg-character${currentImage}.png` : '/images/ufuufu-character1.png'} 
+                      alt={respondedCharacter === 'egg' ? 'エッグさん' : 'ウフウフ'} 
                       className="w-full h-full object-contain drop-shadow-sm"
                     />
                   </motion.div>
