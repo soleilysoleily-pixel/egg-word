@@ -13,6 +13,8 @@ export async function POST(request: Request) {
 
     const { inputText, character = 'egg' } = await request.json();
     
+    console.log('API received character:', character, 'inputText:', inputText?.substring(0, 50) + '...');
+    
     if (!inputText || inputText.trim().length === 0) {
       return NextResponse.json(
         { success: false, error: 'Input text is required' },
@@ -140,6 +142,8 @@ export async function POST(request: Request) {
     
     if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts[0]) {
       const generatedText = data.candidates[0].content.parts[0].text.trim();
+      
+      console.log('API generated response for character:', character, ', text:', generatedText.substring(0, 50) + '...');
       
       return NextResponse.json({
         success: true,
