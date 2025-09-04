@@ -262,7 +262,7 @@ export default function Home() {
               <AnimatePresence>
                 {quote !== "エッグさんの殻の中" && !isLoading && !error && (
                   <motion.div 
-                    className="absolute -bottom-12 right-2 w-12 h-12 sm:-bottom-14 sm:right-4 sm:w-16 sm:h-16 md:-bottom-16 md:right-6 md:w-20 md:h-20 lg:w-24 lg:h-24"
+                    className="absolute -bottom-12 right-2 w-16 h-16 sm:-bottom-14 sm:right-4 sm:w-20 sm:h-20 md:-bottom-16 md:right-6 md:w-20 md:h-20 lg:w-24 lg:h-24 z-10"
                     initial={{ opacity: 0, scale: 0.5, rotate: -10 }}
                     animate={{ opacity: 1, scale: 1, rotate: 0 }}
                     exit={{ opacity: 0, scale: 0.5 }}
