@@ -139,8 +139,8 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        'serif-jp': ['var(--font-noto-serif-jp)', 'serif'],
-        'sans': ['var(--font-geist-sans)', 'sans-serif'],
+        'rounded': ['var(--font-m-plus-rounded)', 'sans-serif'],
+        'sans': ['var(--font-m-plus-rounded)', 'sans-serif'],
       },
     },
   },

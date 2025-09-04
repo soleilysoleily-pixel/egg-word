@@ -13,7 +13,7 @@ export default function Home() {
   const [nextCharacter, setNextCharacter] = useState<'egg' | 'ufuufu'>('egg'); // 次に使用するキャラクター
   const [respondedCharacter, setRespondedCharacter] = useState<'egg' | 'ufuufu'>('egg'); // 現在表示されているレスポンスをしたキャラクター
   const [currentImage, setCurrentImage] = useState<number>(1); // 1 or 2 for alternating images
-  const [ufuufuBgColor, setUfuufuBgColor] = useState<string>('#FFE4E1'); // ウフウフ背景色
+  const [bgColor, setBgColor] = useState<string>('#A3B18A'); // 名言背景色
   const quoteRef = useRef<HTMLDivElement>(null);
   
 
@@ -107,6 +107,12 @@ export default function Home() {
         setRespondedCharacter(characterToUse);
         console.log('Response character set to:', characterToUse);
         
+        // 名言背景色をランダム選択
+        const bgColors = ['#A3B18A', '#D7C7E3', '#E6D9C2'];
+        const randomBgColor = bgColors[Math.floor(Math.random() * bgColors.length)];
+        setBgColor(randomBgColor);
+        console.log('Quote background color:', randomBgColor);
+        
         // 現在のキャラクター（レスポンスしたキャラクター）に応じた表示設定
         if (characterToUse === 'egg') {
           // エッグさん用：画像を交互に切り替え
@@ -115,12 +121,6 @@ export default function Home() {
             console.log('Egg image switching:', prev, '->', newImage);
             return newImage;
           });
-        } else {
-          // ウフウフ用：背景色をランダム選択
-          const ufuufuColors = ['#FFE4E1', '#EBDCF9', '#DFFFFEA'];
-          const randomColor = ufuufuColors[Math.floor(Math.random() * ufuufuColors.length)];
-          setUfuufuBgColor(randomColor);
-          console.log('Ufuufu bg color:', randomColor);
         }
         
         // 次回用にキャラクターを切り替え
@@ -188,10 +188,10 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-sans font-bold text-feminine-pink whitespace-nowrap">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-rounded font-bold text-feminine-pink whitespace-nowrap">
                 エッグさん名言ジェネレーター
               </h1>
-              <p className="text-sm sm:text-base text-feminine-text/70 leading-relaxed font-sans px-2 sm:px-0">
+              <p className="text-sm sm:text-base text-feminine-text/70 leading-relaxed font-rounded px-2 sm:px-0">
                 あなたのもやもやを言葉に。<br className="block md:hidden" />エッグさんとなかまたちが答えます
               </p>
             </motion.div>
@@ -201,21 +201,22 @@ export default function Home() {
               {(isLoading || quote !== "エッグさんの殻の中") && (
                 <motion.div 
                   ref={quoteRef}
-                  className="rounded-lg px-3 py-8 sm:px-4 sm:py-12 md:px-8 md:py-14 lg:px-12 lg:py-16 min-h-[240px] sm:min-h-[280px] md:min-h-[300px] lg:min-h-[320px] flex flex-col justify-between relative"
-                  initial={{ opacity: 0, y: 30, scale: 0.95, backgroundColor: "#ffffff" }}
+                  className="rounded-md px-8 py-6 sm:py-8 md:py-10 lg:py-12 min-h-[180px] sm:min-h-[200px] md:min-h-[220px] lg:min-h-[240px] flex flex-col justify-center relative speech-bubble"
+                  initial={{ opacity: 0, y: 30, scale: 0.95 }}
                   animate={{ 
                     opacity: 1, 
                     y: 0, 
-                    scale: 1,
-                    backgroundColor: isLoading ? "#ffffff" : 
-                      (respondedCharacter === 'egg' ? "rgba(139, 154, 107, 0.9)" : ufuufuBgColor) // エッグさんならオリーブ色、ウフウフならランダム色
+                    scale: 1
                   }}
+                  style={{
+                    backgroundColor: isLoading ? "#ffffff" : bgColor,
+                    '--speech-tail-color': isLoading ? "#ffffff" : bgColor
+                  } as React.CSSProperties}
                   exit={{ opacity: 0, y: -30, scale: 0.95 }}
                   transition={{ 
                     duration: 0.6, 
                     type: "spring", 
-                    stiffness: 100,
-                    backgroundColor: { duration: 2.0, ease: "easeInOut" } // 背景色変化のトランジション
+                    stiffness: 100
                   }}
                 >
               <div className="flex-1 flex items-center justify-start">
@@ -242,14 +243,14 @@ export default function Home() {
                 ) : (
                   <AnimatePresence mode="wait">
                     <motion.div 
-                      className="w-full px-3 pb-20 sm:px-4 sm:pr-20 sm:pb-0 md:px-8 md:pr-24 lg:px-12 lg:pr-32"
+                      className="w-full text-left"
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -20 }}
                       transition={{ duration: 0.5 }}
                       key={quote}
                     >
-                      <p className={`text-base sm:text-lg md:text-xl lg:text-2xl text-left leading-relaxed whitespace-pre-line font-sans ${respondedCharacter === 'egg' ? 'text-white' : 'text-[#444]'}`} style={{wordBreak: 'keep-all', overflowWrap: 'break-word', lineHeight: '1.8', hangingPunctuation: 'force-end'}}>
+                      <p className={`text-sm sm:text-base md:text-lg lg:text-xl text-left leading-relaxed whitespace-pre-line font-rounded mx-auto max-w-fit ${bgColor === '#A3B18A' ? 'text-white' : 'text-gray-700'}`} style={{wordBreak: 'keep-all', overflowWrap: 'break-word', lineHeight: '1.6', hangingPunctuation: 'force-end'}}>
                         {convertText(formatQuoteText(quote))}
                       </p>
                     </motion.div>
@@ -257,11 +258,11 @@ export default function Home() {
                 )}
               </div>
               
-              {/* エッグさんイラスト（右下） - 名言生成後のみ表示 */}
+              {/* キャラアイコン（右下吹き出しエリア外） - 名言生成後のみ表示 */}
               <AnimatePresence>
                 {quote !== "エッグさんの殻の中" && !isLoading && !error && (
                   <motion.div 
-                    className="absolute bottom-2 right-2 w-16 h-16 sm:bottom-4 sm:right-4 sm:w-20 sm:h-20 md:bottom-6 md:right-6 md:w-28 md:h-28 lg:w-32 lg:h-32"
+                    className="absolute -bottom-12 right-2 w-12 h-12 sm:-bottom-14 sm:right-4 sm:w-16 sm:h-16 md:-bottom-16 md:right-6 md:w-20 md:h-20 lg:w-24 lg:h-24"
                     initial={{ opacity: 0, scale: 0.5, rotate: -10 }}
                     animate={{ opacity: 1, scale: 1, rotate: 0 }}
                     exit={{ opacity: 0, scale: 0.5 }}
@@ -275,6 +276,9 @@ export default function Home() {
                       })()}
                       alt={respondedCharacter === 'egg' ? 'エッグさん' : 'ウフウフ'} 
                       className="w-full h-full object-contain drop-shadow-sm"
+                      style={{
+                        transform: respondedCharacter === 'ufuufu' ? 'scale(2)' : 'scale(1)'
+                      }}
                     />
                   </motion.div>
                 )}
@@ -290,7 +294,7 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <label htmlFor="input-text" className="block text-xs sm:text-sm font-medium text-feminine-text text-center px-2">
+              <label htmlFor="input-text" className="block text-xs sm:text-sm font-medium text-feminine-text text-center px-2 font-rounded">
                 愚痴・悩み・つぶやきを入力してみて🥚
               </label>
               <textarea
@@ -298,9 +302,11 @@ export default function Home() {
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 placeholder="例：今日も仕事でイライラしてしまった..."
-                className="w-full p-2 sm:p-3 bg-feminine-input border-none rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-feminine-pink focus:ring-opacity-50 transition-all duration-200 font-sans text-feminine-text placeholder-feminine-text placeholder-opacity-50 text-sm sm:text-base"
+                className="w-full p-2 sm:p-3 bg-feminine-input border-none rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-feminine-pink focus:ring-opacity-50 transition-all duration-200 font-rounded text-feminine-text placeholder-feminine-text placeholder-opacity-50 text-sm sm:text-base"
                 rows={3}
                 maxLength={200}
+                readOnly={quote !== "エッグさんの殻の中" && !error}
+                disabled={quote !== "エッグさんの殻の中" && !error}
               />
               <div className="text-right text-xs text-feminine-text/50">
                 {inputText.length}/200文字
@@ -320,7 +326,7 @@ export default function Home() {
                   <button 
                     onClick={() => generateQuote()}
                     disabled={inputText.trim().length === 0}
-                    className="bg-feminine-pink hover:bg-feminine-pink-hover text-white font-medium py-2 px-4 sm:py-3 sm:px-6 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-feminine-pink focus:ring-opacity-50 disabled:cursor-not-allowed font-sans text-sm sm:text-base"
+                    className="bg-feminine-pink hover:bg-feminine-pink-hover text-white font-medium py-2 px-4 sm:py-3 sm:px-6 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-feminine-pink focus:ring-opacity-50 disabled:cursor-not-allowed font-rounded text-sm sm:text-base"
                   >
                     愚痴る
                   </button>
@@ -346,9 +352,9 @@ export default function Home() {
                       // キャラクター状態は維持（交代を継続）
                       console.log('Reset - keeping character alternation, next:', nextCharacter);
                     }}
-                    className="bg-feminine-pink hover:bg-feminine-pink-hover text-white font-medium py-2 px-4 sm:py-3 sm:px-6 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-feminine-pink focus:ring-opacity-50 font-sans text-sm sm:text-base"
+                    className="bg-feminine-pink hover:bg-feminine-pink-hover text-white font-medium py-2 px-4 sm:py-3 sm:px-6 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-feminine-pink focus:ring-opacity-50 font-rounded text-sm sm:text-base"
                   >
-                    もっと愚痴る
+                    もう一回
                   </button>
                 </motion.div>
               )}
@@ -363,7 +369,7 @@ export default function Home() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 1 }}
         >
-          <p className="text-feminine-text/60 font-sans text-xs">
+          <p className="text-feminine-text/60 font-rounded text-xs">
             © 2025 leSoleil · egg-quote.app
           </p>
         </motion.footer>

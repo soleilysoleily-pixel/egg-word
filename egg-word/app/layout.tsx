@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Noto_Serif_JP } from "next/font/google";
+import { M_PLUS_Rounded_1c } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
 
@@ -13,17 +13,11 @@ export const metadata: Metadata = {
   description: "AIがエッグさんの言葉をリアルタイム生成。シュールで少しドライ、アート寄りの名言をお楽しみください。",
 };
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const mPlusRounded = M_PLUS_Rounded_1c({
+  variable: "--font-m-plus-rounded",
   display: "swap",
   subsets: ["latin"],
-});
-
-const notoSerifJP = Noto_Serif_JP({
-  variable: "--font-noto-serif-jp",
-  display: "swap",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["300", "400", "500", "700", "800", "900"],
 });
 
 export default function RootLayout({
@@ -33,7 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${notoSerifJP.variable} antialiased`}>
+      <body className={`${mPlusRounded.variable} antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
