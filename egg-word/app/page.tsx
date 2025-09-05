@@ -171,14 +171,14 @@ export default function Home() {
           </div>
         </nav>
 
-        <div className="flex-1 flex flex-col items-center justify-center max-w-4xl p-2 sm:p-3 md:p-4 lg:p-6 w-full">
+        <div className="flex-1 flex flex-col items-center justify-center max-w-4xl p-1 sm:p-2 md:p-3 lg:p-4 w-full">
           {/* メインアプリカード */}
-          <div className="bg-white rounded-lg px-3 py-2 sm:px-4 sm:py-3 md:px-8 md:py-4 lg:px-12 lg:py-5 w-full max-w-3xl">
+          <div className="bg-white rounded-lg px-2 py-2 sm:px-4 sm:py-3 md:px-8 md:py-4 lg:px-12 lg:py-5 w-full max-w-3xl">
             {/* メイン生成エリア */}
             <div className="w-full space-y-4 sm:space-y-6 flex-1 flex flex-col">
             {/* タイトル */}
             <motion.div 
-              className="text-center space-y-2 mt-4 sm:mt-6 md:mt-8"
+              className="text-center space-y-1 sm:space-y-2 mt-2 sm:mt-4 md:mt-6"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
@@ -246,9 +246,9 @@ export default function Home() {
                       transition={{ duration: 0.5 }}
                       key={quote}
                     >
-                      <div className="flex justify-center sm:justify-start w-full">
-                        <div className="text-left w-full sm:max-w-fit px-4 sm:px-0">
-                          <p className={`text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed whitespace-pre-line font-rounded pr-16 sm:pl-20 sm:pr-5 ${bgColor === '#A3B18A' ? 'text-white' : 'text-gray-700'}`} style={{
+                      <div className="flex justify-center">
+                        <div className="text-left px-6 sm:pl-20 sm:pr-20" style={{maxWidth: 'calc(100% - 80px)'}}>
+                          <p className={`text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed whitespace-pre-line font-rounded ${bgColor === '#A3B18A' ? 'text-white' : 'text-gray-700'}`} style={{
                             wordBreak: 'keep-all', 
                             overflowWrap: 'break-word', 
                             lineHeight: '1.7', 
@@ -370,7 +370,7 @@ export default function Home() {
         </div>
 
         <motion.footer 
-          className="w-full flex flex-col items-center justify-center border-t border-gray-200/30 mx-auto text-center text-xs gap-1 sm:gap-2 py-2 sm:py-4 bg-white/50 backdrop-blur-sm"
+          className="w-full flex flex-col items-center justify-center border-t border-gray-200/30 mx-auto text-center text-xs gap-1 sm:gap-2 py-1 sm:py-2 bg-white/50 backdrop-blur-sm"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 1 }}
