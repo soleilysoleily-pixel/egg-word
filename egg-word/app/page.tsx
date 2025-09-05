@@ -173,7 +173,7 @@ export default function Home() {
 
         <div className="flex-1 flex flex-col items-center justify-center max-w-4xl p-1 sm:p-2 md:p-3 lg:p-4 w-full">
           {/* メインアプリカード */}
-          <div className="bg-white rounded-lg px-3 py-3 sm:px-4 sm:py-4 md:px-5 md:py-4 w-full max-w-xl sm:max-w-lg">
+          <div className="bg-white rounded-lg px-3 py-3 sm:px-4 sm:py-4 md:px-5 md:py-4 lg:px-6 lg:py-5 w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl">
             {/* メイン生成エリア */}
             <div className="w-full space-y-3 sm:space-y-4 flex-1 flex flex-col">
             {/* タイトル */}
@@ -352,7 +352,6 @@ export default function Home() {
                   <button 
                     onClick={() => {
                       setQuote("エッグさんの殻の中");
-                      setInputText("");
                       setError("");
                       // キャラクター状態は維持（交代を継続）
                       console.log('Reset - keeping character alternation, next:', nextCharacter);
