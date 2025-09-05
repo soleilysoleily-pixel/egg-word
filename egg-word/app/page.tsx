@@ -22,32 +22,41 @@ export default function Home() {
     return text.replace(/私/g, 'わたし');
   };
 
-  // スマホでの読みやすい改行調整
+  // スマホでの読みやすい改行調整（文脈重視・句読点行末）
   const formatQuoteText = (text: string) => {
     if (!text || text === "エッグさんの殻の中") {
       return text;
     }
     
-    // スマホ表示を考慮した改行処理
     let formatted = text;
     
-    // 句点・感嘆符・疑問符の後に接続詞がある場合は改行
-    formatted = formatted.replace(/([。！？])\s*(でも|しかし|けれども|それでも|そして|また|ただし|ただ|ところが|なぜなら|つまり|だから|それに|一方|他方|さらに|むしろ|例えば|特に)/g, '$1\n$2');
+    // 1. まず句点・感嘆符・疑問符の後に接続詞がある場合は改行
+    formatted = formatted.replace(/([。！？])\s*(でも|しかし|けれども|それでも|そして|また|ただし|ただ|ところが|なぜなら|つまり|だから|それに|一方|他方|さらに|むしろ|例えば|特に|あのね|それから|きっと)/g, '$1\n$2');
     
-    // スマホでの意味のある改行（25-30文字程度で区切り）
-    formatted = formatted.replace(/([^。！？\n]{25,35}?)([、]|[はがをにでと]|[するいるなるある]|[のだった]|[でした]|[ます]|[です])\s*(?=[あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん])/g, '$1$2\n');
+    // 2. 文脈的な区切りで改行（句読点を行末に保持）
+    // 助詞「は」「が」「を」「に」「で」「と」の後での自然な区切り
+    formatted = formatted.replace(/([^。！？\n]{20,30}?)([、はがをにでと])(\s*)([^。！？、はがをにでと\n])/g, '$1$2\n$4');
     
-    // 長い文章を意味のあるまとまりで分割
-    formatted = formatted.replace(/([^。！？\n]{20,})(という|から|けど|のに|ても)\s*(?=[^。！？])/g, '$1$2\n');
+    // 3. 動詞活用や形容詞活用での自然な区切り
+    formatted = formatted.replace(/([^。！？\n]{20,30}?)(する|した|なる|なった|ある|あった|いる|いた|れる|られる|せる|させる)(\s*)([^。！？\n])/g, '$1$2\n$4');
     
-    // 短すぎる行を前の行に統合（15文字未満）
-    formatted = formatted.replace(/\n([^。！？\n]{1,14}[。！？])/g, '$1');
+    // 4. 「という」「から」「けど」「のに」「ても」「でも」などの接続表現での区切り
+    formatted = formatted.replace(/([^。！？\n]{15,})(という|から|けど|のに|ても|でも|だって|なので|ので|として|にも|まで)(\s*)([^。！？\n])/g, '$1$2\n$4');
     
-    // 句点が行頭に来ないよう調整
-    formatted = formatted.replace(/\n([。！？])/g, '$1\n');
+    // 5. 読点（、）での適切な改行（20文字以上の行で）
+    formatted = formatted.replace(/([^。！？\n]{20,35}?)([、])(\s*)([^。！？\n])/g, '$1$2\n$4');
     
-    // 連続する改行を削除
+    // 6. 短すぎる行を統合（12文字未満の行を前の行に統合）
+    formatted = formatted.replace(/\n([^。！？\n]{1,12}[。！？])/g, '$1');
+    
+    // 7. 句読点が行頭に来ることを防止
+    formatted = formatted.replace(/\n([。！？、])/g, '$1\n');
+    
+    // 8. 空行の除去
     formatted = formatted.replace(/\n\n+/g, '\n');
+    
+    // 9. 行の先頭と末尾の空白を除去
+    formatted = formatted.split('\n').map(line => line.trim()).join('\n');
     
     return formatted.trim();
   };
@@ -162,11 +171,11 @@ export default function Home() {
           </div>
         </nav>
 
-        <div className="flex-1 flex flex-col items-center justify-center max-w-4xl p-3 sm:p-4 md:p-6 lg:p-8 w-full">
+        <div className="flex-1 flex flex-col items-center justify-center max-w-4xl p-2 sm:p-3 md:p-4 lg:p-6 w-full">
           {/* メインアプリカード */}
-          <div className="bg-white rounded-lg px-3 py-3 sm:px-4 sm:py-4 md:px-8 md:py-5 lg:px-12 lg:py-6 w-full max-w-3xl">
+          <div className="bg-white rounded-lg px-3 py-2 sm:px-4 sm:py-3 md:px-8 md:py-4 lg:px-12 lg:py-5 w-full max-w-3xl">
             {/* メイン生成エリア */}
-            <div className="w-full space-y-6 sm:space-y-8 flex-1 flex flex-col">
+            <div className="w-full space-y-4 sm:space-y-6 flex-1 flex flex-col">
             {/* タイトル */}
             <motion.div 
               className="text-center space-y-2 mt-4 sm:mt-6 md:mt-8"
@@ -237,7 +246,7 @@ export default function Home() {
                       transition={{ duration: 0.5 }}
                       key={quote}
                     >
-                      <p className={`text-base sm:text-lg md:text-xl lg:text-2xl text-left leading-relaxed whitespace-pre-line font-rounded ${bgColor === '#A3B18A' ? 'text-white' : 'text-gray-700'}`} style={{wordBreak: 'keep-all', overflowWrap: 'break-word', lineHeight: '1.7', hangingPunctuation: 'force-end', paddingRight: '70px'}}>
+                      <p className={`text-base sm:text-lg md:text-xl lg:text-2xl text-center sm:text-left leading-relaxed whitespace-pre-line font-rounded ${bgColor === '#A3B18A' ? 'text-white' : 'text-gray-700'}`} style={{wordBreak: 'keep-all', overflowWrap: 'break-word', lineHeight: '1.7', hangingPunctuation: 'force-end', paddingRight: '70px'}}>
                         {convertText(formatQuoteText(quote))}
                       </p>
                     </motion.div>
@@ -276,7 +285,7 @@ export default function Home() {
 
             {/* 入力フィールド */}
             <motion.div 
-              className="space-y-3 flex-shrink-0"
+              className="space-y-2 sm:space-y-3 flex-shrink-0"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
@@ -304,7 +313,7 @@ export default function Home() {
             <AnimatePresence>
               {quote === "エッグさんの殻の中" && !isLoading && (
                 <motion.div 
-                  className="text-center"
+                  className="text-center mt-3 sm:mt-4"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
@@ -325,7 +334,7 @@ export default function Home() {
             <AnimatePresence>
               {quote !== "エッグさんの殻の中" && !isLoading && !error && (
                 <motion.div 
-                  className="text-center mt-6 sm:mt-8"
+                  className="text-center mt-4 sm:mt-6"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
@@ -352,7 +361,7 @@ export default function Home() {
         </div>
 
         <motion.footer 
-          className="w-full flex flex-col items-center justify-center border-t border-gray-200/30 mx-auto text-center text-xs gap-2 sm:gap-3 py-4 sm:py-8 bg-white/50 backdrop-blur-sm"
+          className="w-full flex flex-col items-center justify-center border-t border-gray-200/30 mx-auto text-center text-xs gap-1 sm:gap-2 py-2 sm:py-4 bg-white/50 backdrop-blur-sm"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 1 }}
