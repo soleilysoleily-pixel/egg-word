@@ -166,10 +166,10 @@ export default function Home() {
           {/* メインアプリカード */}
           <div className="bg-white rounded-lg px-3 py-3 sm:px-4 sm:py-4 md:px-8 md:py-5 lg:px-12 lg:py-6 w-full max-w-3xl flex-1 flex flex-col">
             {/* メイン生成エリア */}
-            <div className="w-full space-y-6 sm:space-y-8 flex-1 flex flex-col min-h-[calc(100vh-300px)]">
+            <div className="w-full space-y-4 sm:space-y-6 flex-1 flex flex-col min-h-[calc(100vh-280px)]">
             {/* タイトル */}
             <motion.div 
-              className="text-center space-y-2 mt-4 sm:mt-8"
+              className="text-center space-y-1 sm:space-y-2 mt-2 sm:mt-4"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
@@ -188,7 +188,7 @@ export default function Home() {
               {(isLoading || quote !== "エッグさんの殻の中") && (
                 <motion.div 
                   ref={quoteRef}
-                  className="rounded-md px-4 py-6 sm:px-8 sm:py-8 md:py-10 lg:py-12 min-h-[200px] sm:min-h-[220px] md:min-h-[240px] lg:min-h-[260px] flex flex-col justify-center relative speech-bubble mb-16 sm:mb-20"
+                  className="rounded-md px-4 py-4 sm:px-6 sm:py-6 md:py-8 lg:py-10 min-h-[180px] sm:min-h-[200px] md:min-h-[220px] lg:min-h-[240px] flex flex-col justify-center relative speech-bubble mb-12 sm:mb-16 mx-2 sm:mx-4"
                   initial={{ opacity: 0, y: 30, scale: 0.95 }}
                   animate={{ 
                     opacity: 1, 
@@ -237,7 +237,7 @@ export default function Home() {
                       transition={{ duration: 0.5 }}
                       key={quote}
                     >
-                      <p className={`text-base sm:text-lg md:text-xl lg:text-2xl text-left leading-relaxed whitespace-pre-line font-rounded mx-auto max-w-fit ${bgColor === '#A3B18A' ? 'text-white' : 'text-gray-700'}`} style={{wordBreak: 'keep-all', overflowWrap: 'break-word', lineHeight: '1.7', hangingPunctuation: 'force-end', marginRight: '80px'}}>
+                      <p className={`text-base sm:text-lg md:text-xl lg:text-2xl text-left leading-relaxed whitespace-pre-line font-rounded ${bgColor === '#A3B18A' ? 'text-white' : 'text-gray-700'}`} style={{wordBreak: 'keep-all', overflowWrap: 'break-word', lineHeight: '1.7', hangingPunctuation: 'force-end', paddingRight: '70px'}}>
                         {convertText(formatQuoteText(quote))}
                       </p>
                     </motion.div>
