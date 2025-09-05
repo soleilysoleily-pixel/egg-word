@@ -246,9 +246,14 @@ export default function Home() {
                       transition={{ duration: 0.5 }}
                       key={quote}
                     >
-                      <div className="flex justify-center sm:justify-start">
-                        <div className="text-left max-w-fit" style={{paddingLeft: '80px', paddingRight: '90px'}}>
-                          <p className={`text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed whitespace-pre-line font-rounded ${bgColor === '#A3B18A' ? 'text-white' : 'text-gray-700'}`} style={{wordBreak: 'keep-all', overflowWrap: 'break-word', lineHeight: '1.7', hangingPunctuation: 'force-end'}}>
+                      <div className="flex justify-center sm:justify-start w-full">
+                        <div className="text-left w-full sm:max-w-fit px-4 sm:px-0">
+                          <p className={`text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed whitespace-pre-line font-rounded pr-16 sm:pl-20 sm:pr-5 ${bgColor === '#A3B18A' ? 'text-white' : 'text-gray-700'}`} style={{
+                            wordBreak: 'keep-all', 
+                            overflowWrap: 'break-word', 
+                            lineHeight: '1.7', 
+                            hangingPunctuation: 'force-end'
+                          }}>
                             {convertText(formatQuoteText(quote))}
                           </p>
                         </div>
