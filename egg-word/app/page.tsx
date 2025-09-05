@@ -22,40 +22,26 @@ export default function Home() {
     return text.replace(/私/g, 'わたし');
   };
 
-  // エッグのイラストに重ならない部分での改行調整
+  // スマホでの読みやすい改行調整
   const formatQuoteText = (text: string) => {
     if (!text || text === "エッグさんの殻の中") {
       return text;
     }
     
-    // エッグのイラスト領域（右下約1/3）に重ならない場合は改行しない
-    // 約100文字以下なら改行なしで表示（句読点はそのまま保持）
-    if (text.length <= 100) {
-      return text;
-    }
+    // スマホ表示を考慮した改行処理
+    let formatted = text;
     
-    // 句点・感嘆符・疑問符で文を分割
-    const sentences = text.split(/([。！？])/).filter(part => part.length > 0);
+    // 句点・感嘆符・疑問符の後に接続詞がある場合は改行
+    formatted = formatted.replace(/([。！？])\s*(でも|しかし|けれども|それでも|そして|また|ただし|ただ|ところが|なぜなら|つまり|だから|それに|一方|他方|さらに|むしろ|例えば|特に)/g, '$1\n$2');
     
-    // 分割された文を再構築
-    let reconstructed = '';
-    for (let i = 0; i < sentences.length; i += 2) {
-      const sentence = sentences[i] || '';
-      const punctuation = sentences[i + 1] || '';
-      reconstructed += sentence + punctuation;
-    }
+    // スマホでの意味のある改行（25-30文字程度で区切り）
+    formatted = formatted.replace(/([^。！？\n]{25,35}?)([、]|[はがをにでと]|[するいるなるある]|[のだった]|[でした]|[ます]|[です])\s*(?=[あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん])/g, '$1$2\n');
     
-    // 意味のある区切りで改行を挿入（句点を行末に保つ）
-    let formatted = reconstructed.replace(/([。！？])\s*(でも|しかし|けれども|それでも|そして|また|ただし|ただ|ところが|なぜなら|つまり|だから|それに|一方|他方|さらに|むしろ|例えば|特に)/g, (_, punctuation, conjunction) => {
-      // 句点の後に接続詞が続く場合、句点を行末にして改行
-      return punctuation + '\n' + conjunction;
-    });
+    // 長い文章を意味のあるまとまりで分割
+    formatted = formatted.replace(/([^。！？\n]{20,})(という|から|けど|のに|ても)\s*(?=[^。！？])/g, '$1$2\n');
     
-    // 長すぎる文の場合、適切な位置で改行（40文字程度を目安）
-    formatted = formatted.replace(/([^。！？\n]{40,}?)([、]|[はがをにでと]|[するいるなるある]|[のだった])\s*(?=[あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん])/g, '$1$2\n');
-    
-    // 改行後の文が短すぎる場合は改行を削除（20文字未満）
-    formatted = formatted.replace(/\n([^。！？\n]{1,19}[。！？])/g, '$1');
+    // 短すぎる行を前の行に統合（15文字未満）
+    formatted = formatted.replace(/\n([^。！？\n]{1,14}[。！？])/g, '$1');
     
     // 句点が行頭に来ないよう調整
     formatted = formatted.replace(/\n([。！？])/g, '$1\n');
@@ -160,7 +146,7 @@ export default function Home() {
 
 
   return (
-    <main className="min-h-screen flex flex-col items-center bg-feminine-bg" style={{minHeight: '100vh'}}>
+    <main className="min-h-screen flex flex-col items-center bg-feminine-bg">
       <div className="flex-1 w-full flex flex-col items-center">
         <nav className="w-full flex justify-center border-b border-gray-200/30 h-14 sm:h-16 bg-white/70 backdrop-blur-sm">
           <div className="w-full max-w-4xl flex justify-between items-center p-2 px-3 sm:p-3 sm:px-5 text-xs sm:text-sm">
@@ -176,11 +162,11 @@ export default function Home() {
           </div>
         </nav>
 
-        <div className="flex-1 flex flex-col items-center justify-center max-w-4xl p-3 sm:p-4 md:p-6 lg:p-8 w-full">
+        <div className="flex-1 flex flex-col items-center justify-start max-w-4xl p-3 sm:p-4 md:p-6 lg:p-8 w-full min-h-[calc(100vh-200px)]">
           {/* メインアプリカード */}
-          <div className="bg-white rounded-lg px-3 py-3 sm:px-4 sm:py-4 md:px-8 md:py-5 lg:px-12 lg:py-6 w-full max-w-3xl">
+          <div className="bg-white rounded-lg px-3 py-3 sm:px-4 sm:py-4 md:px-8 md:py-5 lg:px-12 lg:py-6 w-full max-w-3xl flex-1 flex flex-col">
             {/* メイン生成エリア */}
-            <div className="w-full space-y-6 sm:space-y-8">
+            <div className="w-full space-y-6 sm:space-y-8 flex-1 flex flex-col min-h-[calc(100vh-300px)]">
             {/* タイトル */}
             <motion.div 
               className="text-center space-y-2 mt-4 sm:mt-8"
@@ -192,16 +178,17 @@ export default function Home() {
                 エッグさん名言ジェネレーター
               </h1>
               <p className="text-sm sm:text-base text-feminine-text/70 leading-relaxed font-rounded px-2 sm:px-0">
-                あなたのもやもやを言葉に。<br className="block md:hidden" />エッグさんとなかまたちが答えます
+                あなたのモヤモヤに、小さなアートを。
               </p>
             </motion.div>
 
             {/* 名言表示エリア - ローディング中から登場 */}
+            <div className="flex-1 flex flex-col justify-center">
             <AnimatePresence>
               {(isLoading || quote !== "エッグさんの殻の中") && (
                 <motion.div 
                   ref={quoteRef}
-                  className="rounded-md px-8 py-6 sm:py-8 md:py-10 lg:py-12 min-h-[180px] sm:min-h-[200px] md:min-h-[220px] lg:min-h-[240px] flex flex-col justify-center relative speech-bubble"
+                  className="rounded-md px-4 py-6 sm:px-8 sm:py-8 md:py-10 lg:py-12 min-h-[200px] sm:min-h-[220px] md:min-h-[240px] lg:min-h-[260px] flex flex-col justify-center relative speech-bubble mb-16 sm:mb-20"
                   initial={{ opacity: 0, y: 30, scale: 0.95 }}
                   animate={{ 
                     opacity: 1, 
@@ -250,7 +237,7 @@ export default function Home() {
                       transition={{ duration: 0.5 }}
                       key={quote}
                     >
-                      <p className={`text-sm sm:text-base md:text-lg lg:text-xl text-left leading-relaxed whitespace-pre-line font-rounded mx-auto max-w-fit ${bgColor === '#A3B18A' ? 'text-white' : 'text-gray-700'}`} style={{wordBreak: 'keep-all', overflowWrap: 'break-word', lineHeight: '1.6', hangingPunctuation: 'force-end'}}>
+                      <p className={`text-base sm:text-lg md:text-xl lg:text-2xl text-left leading-relaxed whitespace-pre-line font-rounded mx-auto max-w-fit ${bgColor === '#A3B18A' ? 'text-white' : 'text-gray-700'}`} style={{wordBreak: 'keep-all', overflowWrap: 'break-word', lineHeight: '1.7', hangingPunctuation: 'force-end', marginRight: '80px'}}>
                         {convertText(formatQuoteText(quote))}
                       </p>
                     </motion.div>
@@ -289,7 +276,7 @@ export default function Home() {
 
             {/* 入力フィールド */}
             <motion.div 
-              className="space-y-3"
+              className="space-y-3 flex-shrink-0"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
@@ -362,15 +349,19 @@ export default function Home() {
             </div>
           </div>
         </div>
+        </div>
 
         <motion.footer 
-          className="w-full flex items-center justify-center border-t border-gray-200/30 mx-auto text-center text-xs gap-4 sm:gap-8 py-4 sm:py-8 bg-white/50 backdrop-blur-sm"
+          className="w-full flex flex-col items-center justify-center border-t border-gray-200/30 mx-auto text-center text-xs gap-2 sm:gap-3 py-4 sm:py-8 bg-white/50 backdrop-blur-sm"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 1 }}
         >
           <p className="text-feminine-text/60 font-rounded text-xs">
-            © 2025 leSoleil · egg-quote.app
+            © 2025 leSoleil / Eggsan · https://egg-word.vercel.app/
+          </p>
+          <p className="text-feminine-text/60 font-rounded text-xs">
+            スクショして#エッグさんで投稿してね
           </p>
         </motion.footer>
       </div>
