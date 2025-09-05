@@ -162,14 +162,14 @@ export default function Home() {
           </div>
         </nav>
 
-        <div className="flex-1 flex flex-col items-center justify-start max-w-4xl p-3 sm:p-4 md:p-6 lg:p-8 w-full min-h-[calc(100vh-200px)]">
+        <div className="flex-1 flex flex-col items-center justify-center max-w-4xl p-3 sm:p-4 md:p-6 lg:p-8 w-full">
           {/* メインアプリカード */}
-          <div className="bg-white rounded-lg px-3 py-3 sm:px-4 sm:py-4 md:px-8 md:py-5 lg:px-12 lg:py-6 w-full max-w-3xl flex-1 flex flex-col">
+          <div className="bg-white rounded-lg px-3 py-3 sm:px-4 sm:py-4 md:px-8 md:py-5 lg:px-12 lg:py-6 w-full max-w-3xl">
             {/* メイン生成エリア */}
-            <div className="w-full space-y-4 sm:space-y-6 flex-1 flex flex-col min-h-[calc(100vh-280px)]">
+            <div className="w-full space-y-6 sm:space-y-8 flex-1 flex flex-col">
             {/* タイトル */}
             <motion.div 
-              className="text-center space-y-1 sm:space-y-2 mt-2 sm:mt-4"
+              className="text-center space-y-2 mt-4 sm:mt-6 md:mt-8"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
@@ -188,7 +188,7 @@ export default function Home() {
               {(isLoading || quote !== "エッグさんの殻の中") && (
                 <motion.div 
                   ref={quoteRef}
-                  className="rounded-md px-4 py-4 sm:px-6 sm:py-6 md:py-8 lg:py-10 min-h-[180px] sm:min-h-[200px] md:min-h-[220px] lg:min-h-[240px] flex flex-col justify-center relative speech-bubble mb-12 sm:mb-16 mx-2 sm:mx-4"
+                  className="rounded-md px-6 py-6 sm:px-8 sm:py-8 md:py-10 lg:py-12 min-h-[180px] sm:min-h-[200px] md:min-h-[220px] lg:min-h-[240px] flex flex-col justify-center relative speech-bubble mb-16 sm:mb-20"
                   initial={{ opacity: 0, y: 30, scale: 0.95 }}
                   animate={{ 
                     opacity: 1, 

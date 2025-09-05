@@ -72,12 +72,18 @@
     content: '';
     position: absolute;
     bottom: -18px;
-    right: 100px;
+    right: 120px;
     width: 0;
     height: 0;
     border-right: 30px solid var(--speech-tail-color, #A3B18A);
     border-left: 0px solid transparent;
     border-top: 8px solid transparent;
     border-bottom: 20px solid transparent;
+  }
+  
+  @media (max-width: 640px) {
+    .speech-bubble::after {
+      right: 90px;
+    }
   }
 }
