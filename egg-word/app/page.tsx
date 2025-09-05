@@ -246,9 +246,11 @@ export default function Home() {
                       transition={{ duration: 0.5 }}
                       key={quote}
                     >
-                      <p className={`text-base sm:text-lg md:text-xl lg:text-2xl text-center sm:text-left leading-relaxed whitespace-pre-line font-rounded ${bgColor === '#A3B18A' ? 'text-white' : 'text-gray-700'}`} style={{wordBreak: 'keep-all', overflowWrap: 'break-word', lineHeight: '1.7', hangingPunctuation: 'force-end', paddingRight: '70px'}}>
-                        {convertText(formatQuoteText(quote))}
-                      </p>
+                      <div className="flex justify-center sm:justify-start">
+                        <p className={`text-base sm:text-lg md:text-xl lg:text-2xl text-left leading-relaxed whitespace-pre-line font-rounded ${bgColor === '#A3B18A' ? 'text-white' : 'text-gray-700'} max-w-fit`} style={{wordBreak: 'keep-all', overflowWrap: 'break-word', lineHeight: '1.7', hangingPunctuation: 'force-end', paddingRight: '70px'}}>
+                          {convertText(formatQuoteText(quote))}
+                        </p>
+                      </div>
                     </motion.div>
                   </AnimatePresence>
                 )}
