@@ -173,12 +173,12 @@ export default function Home() {
 
         <div className="flex-1 flex flex-col items-center justify-center max-w-4xl p-1 sm:p-2 md:p-3 lg:p-4 w-full">
           {/* メインアプリカード */}
-          <div className="bg-white rounded-lg px-2 py-2 sm:px-4 sm:py-3 md:px-8 md:py-4 lg:px-12 lg:py-5 w-full max-w-3xl">
+          <div className="bg-white rounded-lg px-3 py-3 sm:px-5 sm:py-4 md:px-6 md:py-5 w-full max-w-2xl">
             {/* メイン生成エリア */}
-            <div className="w-full space-y-4 sm:space-y-6 flex-1 flex flex-col">
+            <div className="w-full space-y-3 sm:space-y-4 flex-1 flex flex-col">
             {/* タイトル */}
             <motion.div 
-              className="text-center space-y-1 sm:space-y-2 mt-2 sm:mt-4 md:mt-6"
+              className="text-center space-y-1 sm:space-y-2 mt-1 sm:mt-2 md:mt-3"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
@@ -197,7 +197,7 @@ export default function Home() {
               {(isLoading || quote !== "エッグさんの殻の中") && (
                 <motion.div 
                   ref={quoteRef}
-                  className="rounded-md px-6 py-6 sm:px-8 sm:py-8 md:py-10 lg:py-12 min-h-[180px] sm:min-h-[200px] md:min-h-[220px] lg:min-h-[240px] flex flex-col justify-center relative speech-bubble mb-16 sm:mb-20"
+                  className="rounded-md px-4 py-4 sm:px-6 sm:py-6 md:py-7 lg:py-8 min-h-[140px] sm:min-h-[160px] md:min-h-[170px] lg:min-h-[180px] flex flex-col justify-center relative speech-bubble mb-12 sm:mb-16"
                   initial={{ opacity: 0, y: 30, scale: 0.95 }}
                   animate={{ 
                     opacity: 1, 
@@ -247,8 +247,8 @@ export default function Home() {
                       key={quote}
                     >
                       <div className="flex justify-center">
-                        <div className="text-left px-6 sm:pl-20 sm:pr-20" style={{maxWidth: 'calc(100% - 80px)'}}>
-                          <p className={`text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed whitespace-pre-line font-rounded ${bgColor === '#A3B18A' ? 'text-white' : 'text-gray-700'}`} style={{
+                        <div className="text-left px-2 sm:px-4 md:px-6" style={{maxWidth: 'calc(100% - 40px)'}}>
+                          <p className={`text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed whitespace-pre-line font-rounded ${bgColor === '#A3B18A' ? 'text-white' : 'text-gray-700'}`} style={{
                             wordBreak: 'keep-all', 
                             overflowWrap: 'break-word', 
                             lineHeight: '1.7', 
@@ -294,12 +294,12 @@ export default function Home() {
 
             {/* 入力フィールド */}
             <motion.div 
-              className="space-y-2 sm:space-y-3 flex-shrink-0"
+              className="space-y-2 sm:space-y-3 flex-shrink-0 px-1"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <label htmlFor="input-text" className="block text-xs sm:text-sm font-medium text-feminine-text text-center px-2 font-rounded">
+              <label htmlFor="input-text" className="block text-xs sm:text-sm font-medium text-feminine-text text-center font-rounded">
                 愚痴・悩み・つぶやきを入力してみて🥚
               </label>
               <textarea
@@ -307,13 +307,13 @@ export default function Home() {
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 placeholder="例：今日も仕事でイライラしてしまった..."
-                className="w-full p-2 sm:p-3 bg-feminine-input border-none rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-feminine-pink focus:ring-opacity-50 transition-all duration-200 font-rounded text-feminine-text placeholder-feminine-text placeholder-opacity-50 text-sm sm:text-base"
+                className="w-full p-3 sm:p-4 bg-feminine-input border-none rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-feminine-pink focus:ring-opacity-50 transition-all duration-200 font-rounded text-feminine-text placeholder-feminine-text placeholder-opacity-50 text-sm sm:text-base"
                 rows={3}
                 maxLength={200}
                 readOnly={quote !== "エッグさんの殻の中" && !error}
                 disabled={quote !== "エッグさんの殻の中" && !error}
               />
-              <div className="text-right text-xs text-feminine-text/50">
+              <div className="text-right text-xs text-feminine-text/50 pr-1">
                 {inputText.length}/200文字
               </div>
             </motion.div>
@@ -322,7 +322,7 @@ export default function Home() {
             <AnimatePresence>
               {quote === "エッグさんの殻の中" && !isLoading && (
                 <motion.div 
-                  className="text-center mt-3 sm:mt-4"
+                  className="text-center mt-2 sm:mt-3"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
@@ -343,7 +343,7 @@ export default function Home() {
             <AnimatePresence>
               {quote !== "エッグさんの殻の中" && !isLoading && !error && (
                 <motion.div 
-                  className="text-center mt-4 sm:mt-6"
+                  className="text-center mt-3 sm:mt-4"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
