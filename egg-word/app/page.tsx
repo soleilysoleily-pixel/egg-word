@@ -173,7 +173,7 @@ export default function Home() {
 
         <div className="flex-1 flex flex-col items-center justify-center max-w-4xl p-1 sm:p-2 md:p-3 lg:p-4 w-full">
           {/* メインアプリカード */}
-          <div className="bg-white rounded-lg px-3 py-3 sm:px-5 sm:py-4 md:px-6 md:py-5 w-full max-w-2xl">
+          <div className="bg-white rounded-lg px-3 py-3 sm:px-4 sm:py-4 md:px-5 md:py-4 w-full max-w-xl sm:max-w-lg">
             {/* メイン生成エリア */}
             <div className="w-full space-y-3 sm:space-y-4 flex-1 flex flex-col">
             {/* タイトル */}
@@ -247,8 +247,8 @@ export default function Home() {
                       key={quote}
                     >
                       <div className="flex justify-center">
-                        <div className="text-left px-2 sm:px-4 md:px-6" style={{maxWidth: 'calc(100% - 40px)'}}>
-                          <p className={`text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed whitespace-pre-line font-rounded ${bgColor === '#A3B18A' ? 'text-white' : 'text-gray-700'}`} style={{
+                        <div className="text-left px-2 sm:px-3 md:px-4 w-full max-w-full">
+                          <p className={`text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed whitespace-pre-line font-rounded ${bgColor === '#A3B18A' ? 'text-white' : 'text-gray-700'}`} style={{
                             wordBreak: 'keep-all', 
                             overflowWrap: 'break-word', 
                             lineHeight: '1.7', 
