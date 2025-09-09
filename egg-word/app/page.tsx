@@ -64,8 +64,11 @@ export default function Home() {
     const lines = formatted.split('\n');
     if (lines.length > 0) {
       const lastLine = lines[lines.length - 1];
-      // 最後の行が25文字以上の場合、改行を追加
-      if (lastLine.length > 25) {
+      // スマホ用: 最後の行が15文字以上、PC用: 25文字以上の場合、改行を追加
+      const mobileThreshold = 15;
+      const desktopThreshold = 25;
+      
+      if (lastLine.length > mobileThreshold) {
         // 句読点、助詞、接続詞で区切れる場所を探す
         const breakPoints = [
           /([。！？、])/,
@@ -75,17 +78,34 @@ export default function Home() {
         ];
         
         let bestBreakIndex = -1;
+        
+        // まずスマホ用の短い改行位置を探す（6-12文字）
         for (const regex of breakPoints) {
           const matches = [...lastLine.matchAll(new RegExp(regex.source + '.*?', 'g'))];
           for (const match of matches) {
             const index = match.index! + match[1].length;
-            // 改行位置が10-20文字の範囲にある場合を優先
-            if (index >= 10 && index <= 20 && index < lastLine.length - 5) {
+            // スマホ用: 6-12文字の位置を優先、PC用: 10-20文字の位置
+            if (index >= 6 && index <= 12 && index < lastLine.length - 3) {
               bestBreakIndex = index;
               break;
             }
           }
           if (bestBreakIndex !== -1) break;
+        }
+        
+        // スマホ用で見つからなかった場合、PC用の範囲で探す
+        if (bestBreakIndex === -1 && lastLine.length > desktopThreshold) {
+          for (const regex of breakPoints) {
+            const matches = [...lastLine.matchAll(new RegExp(regex.source + '.*?', 'g'))];
+            for (const match of matches) {
+              const index = match.index! + match[1].length;
+              if (index >= 10 && index <= 20 && index < lastLine.length - 5) {
+                bestBreakIndex = index;
+                break;
+              }
+            }
+            if (bestBreakIndex !== -1) break;
+          }
         }
         
         // 適切な改行位置が見つかった場合
@@ -236,7 +256,7 @@ export default function Home() {
               {(isLoading || quote !== "エッグさんの殻の中") && (
                 <motion.div 
                   ref={quoteRef}
-                  className="rounded-md px-4 py-4 sm:px-6 sm:py-6 md:py-7 lg:py-8 min-h-[140px] sm:min-h-[160px] md:min-h-[170px] lg:min-h-[180px] flex flex-col justify-center relative speech-bubble mb-12 sm:mb-16"
+                  className="rounded-md px-4 py-4 sm:px-6 sm:py-6 md:py-7 lg:py-8 min-h-[140px] sm:min-h-[160px] md:min-h-[170px] lg:min-h-[180px] flex flex-col justify-center relative speech-bubble mb-14 sm:mb-16"
                   initial={{ opacity: 0, y: 30, scale: 0.95 }}
                   animate={{ 
                     opacity: 1, 
