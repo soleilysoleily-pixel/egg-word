@@ -49,14 +49,53 @@ export default function Home() {
     // 6. 短すぎる行を統合（12文字未満の行を前の行に統合）
     formatted = formatted.replace(/\n([^。！？\n]{1,12}[。！？])/g, '$1');
     
-    // 7. 句読点が行頭に来ることを防止
-    formatted = formatted.replace(/\n([。！？、])/g, '$1\n');
+    // 7. 句読点が行頭に来ることを防止（禁則処理）
+    formatted = formatted.replace(/\n([。！？、）」』】〉》〕〗〙〛ゝゞ々ー])/g, '$1\n');
+    // 開き括弧類が行末に来ることを防止
+    formatted = formatted.replace(/([（「『【〈《〔〖〘〚])\n/g, '\n$1');
     
     // 8. 空行の除去
     formatted = formatted.replace(/\n\n+/g, '\n');
     
     // 9. 行の先頭と末尾の空白を除去
     formatted = formatted.split('\n').map(line => line.trim()).join('\n');
+    
+    // 10. 最後の行が長い場合、適切な位置で改行して短くする
+    const lines = formatted.split('\n');
+    if (lines.length > 0) {
+      const lastLine = lines[lines.length - 1];
+      // 最後の行が25文字以上の場合、改行を追加
+      if (lastLine.length > 25) {
+        // 句読点、助詞、接続詞で区切れる場所を探す
+        const breakPoints = [
+          /([。！？、])/,
+          /([はがをにでと])/,
+          /([から|けど|でも|だって|という])/,
+          /([する|した|なる|なった|ある|いる])/
+        ];
+        
+        let bestBreakIndex = -1;
+        for (const regex of breakPoints) {
+          const matches = [...lastLine.matchAll(new RegExp(regex.source + '.*?', 'g'))];
+          for (const match of matches) {
+            const index = match.index! + match[1].length;
+            // 改行位置が10-20文字の範囲にある場合を優先
+            if (index >= 10 && index <= 20 && index < lastLine.length - 5) {
+              bestBreakIndex = index;
+              break;
+            }
+          }
+          if (bestBreakIndex !== -1) break;
+        }
+        
+        // 適切な改行位置が見つかった場合
+        if (bestBreakIndex !== -1) {
+          const newLastLine = lastLine.substring(0, bestBreakIndex) + '\n' + lastLine.substring(bestBreakIndex);
+          lines[lines.length - 1] = newLastLine;
+          formatted = lines.join('\n');
+        }
+      }
+    }
     
     return formatted.trim();
   };
@@ -252,7 +291,9 @@ export default function Home() {
                             wordBreak: 'keep-all', 
                             overflowWrap: 'break-word', 
                             lineHeight: '1.7', 
-                            hangingPunctuation: 'force-end'
+                            hangingPunctuation: 'force-end',
+                            lineBreak: 'strict',
+                            wordWrap: 'break-word'
                           }}>
                             {convertText(formatQuoteText(quote))}
                           </p>
