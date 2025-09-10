@@ -1,6 +1,5 @@
 "use client";
 
-import { ThemeSwitcher } from "@/components/theme-switcher";
 import Link from "next/link";
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -223,9 +222,6 @@ export default function Home() {
                 <span className="block sm:hidden">エッグさん</span>
                 <span className="hidden sm:block">エッグさん名言ジェネレーター</span>
               </Link>
-            </div>
-            <div className="flex items-center gap-2 sm:gap-4">
-              <ThemeSwitcher />
             </div>
           </div>
         </nav>
