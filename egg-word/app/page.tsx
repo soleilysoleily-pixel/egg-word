@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 
 export default function Home() {
   const [quote, setQuote] = useState<string>("エッグさんの殻の中");
@@ -27,7 +28,7 @@ export default function Home() {
     }
     
     // 基本的な改行のみ
-    let lines = text.split('。').join('。\n').split('\n');
+    const lines = text.split('。').join('。\n').split('\n');
     
     // 基本的な禁則処理のみ
     for (let i = 1; i < lines.length; i++) {
@@ -247,7 +248,7 @@ export default function Home() {
                     exit={{ opacity: 0, scale: 0.5 }}
                     transition={{ duration: 0.4, delay: 0.3, type: "spring", stiffness: 200 }}
                   >
-                    <img 
+                    <Image 
                       src={(() => {
                         const imageSrc = respondedCharacter === 'egg' ? `/images/egg-character${currentImage}.png` : '/images/ufuufu-character1.png';
                         console.log('Image display - respondedCharacter:', respondedCharacter, ', imageSrc:', imageSrc);
@@ -258,6 +259,8 @@ export default function Home() {
                       style={{
                         transform: respondedCharacter === 'ufuufu' ? 'scale(2)' : 'scale(1)'
                       }}
+                      width={120}
+                      height={120}
                     />
                   </motion.div>
                 )}
