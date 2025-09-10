@@ -20,7 +20,7 @@ export default function Home() {
     return text.replace(/私/g, 'わたし');
   };
 
-  // プロ仕様禁則処理・追い込み機能（イラスト領域回避対応）
+  // 軽量版禁則処理・追い込み機能（Vercel対応）
   const formatQuoteText = (text: string) => {
     if (!text || text === "エッグさんの殻の中") {
       return text;
@@ -28,160 +28,29 @@ export default function Home() {
     
     let formatted = text;
     
-    // === Phase 1: 基本改行処理 ===
-    // 1. 句点・感嘆符・疑問符の後の接続詞改行
-    formatted = formatted.replace(/([。！？])\s*(でも|しかし|けれども|それでも|そして|また|ただし|ただ|ところが|なぜなら|つまり|だから|それに|一方|他方|さらに|むしろ|例えば|特に|あのね|それから|きっと)/g, '$1\n$2');
+    // 基本改行処理（簡略化）
+    formatted = formatted.replace(/([。！？])\s*(でも|しかし|そして|また|だから|それに)/g, '$1\n$2');
+    formatted = formatted.replace(/([^。！？\n]{20,30}?)([、はがをにでと])(\s*)([^。！？\n])/g, '$1$2\n$4');
+    formatted = formatted.replace(/([^。！？\n]{20,30}?)(する|した|なる|いる)(\s*)([^。！？\n])/g, '$1$2\n$4');
     
-    // 2. 助詞での文脈改行（文字数調整済み）
-    formatted = formatted.replace(/([^。！？\n]{18,28}?)([、はがをにでと])(\s*)([^。！？、はがをにでと\n])/g, '$1$2\n$4');
+    // 簡略化された禁則処理
+    formatted = formatted.replace(/\n([。、！？）」』])/g, '$1\n');
+    formatted = formatted.replace(/([（「『])\n/g, '\n$1');
     
-    // 3. 動詞・形容詞活用での改行
-    formatted = formatted.replace(/([^。！？\n]{18,28}?)(する|した|なる|なった|ある|あった|いる|いた|れる|られる|せる|させる)(\s*)([^。！？\n])/g, '$1$2\n$4');
+    // 行処理
+    let lines = formatted.split('\n').map(line => line.trim()).filter(line => line.length > 0);
     
-    // 4. 接続表現での改行
-    formatted = formatted.replace(/([^。！？\n]{12,})(という|から|けど|のに|ても|でも|だって|なので|ので|として|にも|まで)(\s*)([^。！？\n])/g, '$1$2\n$4');
-    
-    // 5. 読点での改行（調整済み）
-    formatted = formatted.replace(/([^。！？\n]{18,32}?)([、])(\s*)([^。！？\n])/g, '$1$2\n$4');
-    
-    // === Phase 2: 高度禁則処理（修正版） ===
-    // 行頭に来てはいけない文字を前の行末に移動
-    const kinsokuChars = ['。', '、', '！', '？', '‼', '⁇', '‥', '…', '々', '〆', '）', '】', '〕', '｝', '〉', '》', '」', '』', '〙', '〛', '〗', 'ゝ', 'ゞ', 'ー', '・', '：', '；'];
-    
-    // 改行後に禁則文字がある場合、前の行に移動
-    for (const char of kinsokuChars) {
-      // エスケープ処理
-      const escapedChar = char.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      const regex = new RegExp(`(.)\n(${escapedChar})`, 'g');
-      formatted = formatted.replace(regex, '$1$2\n');
-    }
-    
-    // 行末に来てはいけない文字を次の行に移動
-    const gyomatsuKinsoku = ['（', '【', '〔', '｛', '〈', '《', '「', '『', '〖', '〘', '〚', '〓'];
-    for (const char of gyomatsuKinsoku) {
-      const escapedChar = char.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      const regex = new RegExp(`(${escapedChar})\n`, 'g');
-      formatted = formatted.replace(regex, '\n$1');
-    }
-    
-    // === Phase 3: 追い込み処理 + スマホ禁則強化 ===
-    let lines = formatted.split('\n').map(line => line.trim());
-    
-    // まず行頭禁則文字の処理（確実に実行）
+    // 簡単な行頭禁則処理
     for (let i = 1; i < lines.length; i++) {
       const currentLine = lines[i];
       const prevLine = lines[i - 1];
       
-      // 行頭が禁則文字で始まる場合、前の行に統合
-      if (currentLine.match(/^[。、！？‼⁇‥…々〆）】〕｝〉》」』〙〛〗ゝゞー・：；]/)) {
-        // スマホ対応：統合後が40文字以内なら統合実行
-        if (prevLine.length + currentLine.length <= 40) {
+      if (currentLine.match(/^[。、！？]/)) {
+        if (prevLine.length + currentLine.length <= 35) {
           lines[i - 1] = prevLine + currentLine;
           lines.splice(i, 1);
-          i--; // インデックス調整
-        } else {
-          // 統合できない場合、禁則文字1文字だけを前の行に移動
-          const firstChar = currentLine.charAt(0);
-          const remainingText = currentLine.substring(1);
-          if (remainingText.length > 0) {
-            lines[i - 1] = prevLine + firstChar;
-            lines[i] = remainingText;
-          } else {
-            lines[i - 1] = prevLine + currentLine;
-            lines.splice(i, 1);
-            i--;
-          }
-        }
-      }
-    }
-    
-    // 短い行を前の行に統合（追い込み）
-    for (let i = lines.length - 1; i >= 1; i--) {
-      const currentLine = lines[i];
-      const prevLine = lines[i - 1];
-      
-      // 短い行（8文字以下）は前の行に追い込む
-      if (currentLine.length <= 8 && prevLine.length + currentLine.length <= 35) {
-        lines[i - 1] = prevLine + currentLine;
-        lines.splice(i, 1);
-      }
-      // 中途半端な行（10-15文字）も条件が合えば追い込む
-      else if (currentLine.length <= 15 && prevLine.length + currentLine.length <= 32 && !currentLine.match(/[。！？]/)) {
-        lines[i - 1] = prevLine + currentLine;
-        lines.splice(i, 1);
-      }
-    }
-    
-    // === Phase 4: 最下行イラスト回避処理（強化版） ===
-    if (lines.length > 0) {
-      const lastLine = lines[lines.length - 1];
-      const targetLength = 10; // イラスト回避のための最大文字数
-      
-      if (lastLine.length > targetLength) {
-        // 高優先度区切り位置（自然な切れ目）
-        const highPriorityBreaks = [
-          /([。！？])/g,
-          /([、])/g,
-          /([はがをにでと])/g,
-        ];
-        
-        // 中優先度区切り位置
-        const midPriorityBreaks = [
-          /(という|から|けど|のに|ても|でも|だって|なので|ので)/g,
-          /(する|した|なる|なった|ある|いる)/g,
-        ];
-        
-        // 低優先度区切り位置（最後の手段）
-        const lowPriorityBreaks = [
-          /([の|が|を|に|で|と|は|も|や|か|よ|ね])/g,
-        ];
-        
-        let bestBreak: { beforeSplit: string; afterSplit: string; splitIndex: number } | null = null;
-        let bestScore = -1;
-        
-        // 高優先度から順に最適な分割点を探す
-        for (const breaks of [highPriorityBreaks, midPriorityBreaks, lowPriorityBreaks]) {
-          for (const regex of breaks) {
-            const matches = [...lastLine.matchAll(regex)];
-            
-            for (const match of matches) {
-              const splitIndex = (match.index || 0) + match[1].length;
-              const beforeSplit = lastLine.substring(0, splitIndex);
-              const afterSplit = lastLine.substring(splitIndex);
-              
-              // 分割後の最終行が目標文字数以内で、分割前行が適度な長さ
-              if (afterSplit.length <= targetLength && beforeSplit.length >= 8) {
-                const score = calculateBreakScore(beforeSplit, afterSplit, regex, breaks);
-                if (score > bestScore) {
-                  bestScore = score;
-                  bestBreak = { beforeSplit, afterSplit, splitIndex };
-                }
-              }
-            }
-          }
-          // 高優先度で見つかったら他は試さない
-          if (bestBreak) break;
-        }
-        
-        // 最適な分割点が見つかった場合、分割実行
-        if (bestBreak) {
-          lines[lines.length - 1] = bestBreak.beforeSplit;
-          lines.push(bestBreak.afterSplit);
-        }
-      }
-    }
-    
-    // === Phase 5: 最終調整・禁則確認 ===
-    // 空行除去
-    lines = lines.filter(line => line.length > 0);
-    
-    // 最終的な禁則処理の確認（保険処理）
-    for (let i = 1; i < lines.length; i++) {
-      const currentLine = lines[i];
-      if (currentLine.match(/^[。、！？]/)) {
-        const prevLine = lines[i - 1];
-        // 1文字だけ移動できる場合
-        if (prevLine.length + 1 <= 35) {
+          i--;
+        } else if (prevLine.length + 1 <= 35) {
           const firstChar = currentLine.charAt(0);
           const remainingText = currentLine.substring(1);
           lines[i - 1] = prevLine + firstChar;
@@ -195,32 +64,31 @@ export default function Home() {
       }
     }
     
+    // 最下行イラスト回避（簡略版）
+    if (lines.length > 0) {
+      const lastLine = lines[lines.length - 1];
+      if (lastLine.length > 10) {
+        // 簡単な分割処理
+        const breakRegex = /([。！？、はがをにでと])/g;
+        const matches = [...lastLine.matchAll(breakRegex)];
+        
+        for (const match of matches) {
+          const splitIndex = (match.index || 0) + match[1].length;
+          const beforeSplit = lastLine.substring(0, splitIndex);
+          const afterSplit = lastLine.substring(splitIndex);
+          
+          if (afterSplit.length <= 10 && beforeSplit.length >= 8) {
+            lines[lines.length - 1] = beforeSplit;
+            lines.push(afterSplit);
+            break;
+          }
+        }
+      }
+    }
+    
     return lines.join('\n');
   };
 
-  // 分割点の品質スコア計算
-  const calculateBreakScore = (before: string, after: string, regex: RegExp, breakGroup: RegExp[]) => {
-    let score = 0;
-    
-    // 優先度による基本スコア
-    if (breakGroup === [/([。！？])/g, /([、])/g, /([はがをにでと])/g]) score += 100; // 高優先度
-    else if (breakGroup.length === 2) score += 50; // 中優先度
-    else score += 20; // 低優先度
-    
-    // 分割バランスのスコア
-    const totalLength = before.length + after.length;
-    const ratio = before.length / totalLength;
-    if (ratio >= 0.6 && ratio <= 0.8) score += 30; // 理想的なバランス
-    else if (ratio >= 0.5 && ratio <= 0.9) score += 15;
-    
-    // 最終行の短さスコア（短いほど高得点）
-    score += (10 - after.length) * 5;
-    
-    // 句読点で終わるボーナス
-    if (after.match(/[。！？]$/)) score += 25;
-    
-    return score;
-  };
 
 
 
