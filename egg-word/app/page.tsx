@@ -136,7 +136,7 @@ export default function Home() {
           /([の|が|を|に|で|と|は|も|や|か|よ|ね])/g,
         ];
         
-        let bestBreak = null;
+        let bestBreak: { beforeSplit: string; afterSplit: string; splitIndex: number } | null = null;
         let bestScore = -1;
         
         // 高優先度から順に最適な分割点を探す
