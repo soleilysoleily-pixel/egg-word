@@ -20,73 +20,29 @@ export default function Home() {
     return text.replace(/私/g, 'わたし');
   };
 
-  // 軽量版禁則処理・追い込み機能（Vercel対応）
+  // 超シンプル版（デバッグ用）
   const formatQuoteText = (text: string) => {
     if (!text || text === "エッグさんの殻の中") {
       return text;
     }
     
-    let formatted = text;
+    // 基本的な改行のみ
+    let lines = text.split('。').join('。\n').split('\n');
     
-    // 基本改行処理（簡略化）
-    formatted = formatted.replace(/([。！？])\s*(でも|しかし|そして|また|だから|それに)/g, '$1\n$2');
-    formatted = formatted.replace(/([^。！？\n]{20,30}?)([、はがをにでと])(\s*)([^。！？\n])/g, '$1$2\n$4');
-    formatted = formatted.replace(/([^。！？\n]{20,30}?)(する|した|なる|いる)(\s*)([^。！？\n])/g, '$1$2\n$4');
-    
-    // 簡略化された禁則処理
-    formatted = formatted.replace(/\n([。、！？）」』])/g, '$1\n');
-    formatted = formatted.replace(/([（「『])\n/g, '\n$1');
-    
-    // 行処理
-    let lines = formatted.split('\n').map(line => line.trim()).filter(line => line.length > 0);
-    
-    // 簡単な行頭禁則処理
+    // 基本的な禁則処理のみ
     for (let i = 1; i < lines.length; i++) {
       const currentLine = lines[i];
-      const prevLine = lines[i - 1];
-      
-      if (currentLine.match(/^[。、！？]/)) {
-        if (prevLine.length + currentLine.length <= 35) {
+      if (currentLine.match(/^[、！？]/)) {
+        const prevLine = lines[i - 1];
+        if (prevLine.length + currentLine.length <= 40) {
           lines[i - 1] = prevLine + currentLine;
           lines.splice(i, 1);
           i--;
-        } else if (prevLine.length + 1 <= 35) {
-          const firstChar = currentLine.charAt(0);
-          const remainingText = currentLine.substring(1);
-          lines[i - 1] = prevLine + firstChar;
-          if (remainingText.length > 0) {
-            lines[i] = remainingText;
-          } else {
-            lines.splice(i, 1);
-            i--;
-          }
         }
       }
     }
     
-    // 最下行イラスト回避（簡略版）
-    if (lines.length > 0) {
-      const lastLine = lines[lines.length - 1];
-      if (lastLine.length > 10) {
-        // 簡単な分割処理
-        const breakRegex = /([。！？、はがをにでと])/g;
-        const matches = [...lastLine.matchAll(breakRegex)];
-        
-        for (const match of matches) {
-          const splitIndex = (match.index || 0) + match[1].length;
-          const beforeSplit = lastLine.substring(0, splitIndex);
-          const afterSplit = lastLine.substring(splitIndex);
-          
-          if (afterSplit.length <= 10 && beforeSplit.length >= 8) {
-            lines[lines.length - 1] = beforeSplit;
-            lines.push(afterSplit);
-            break;
-          }
-        }
-      }
-    }
-    
-    return lines.join('\n');
+    return lines.filter(line => line.trim().length > 0).join('\n');
   };
 
 
