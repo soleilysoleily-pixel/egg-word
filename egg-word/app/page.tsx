@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -215,16 +214,6 @@ export default function Home() {
   return (
     <main className="min-h-screen flex flex-col items-center bg-feminine-bg">
       <div className="flex-1 w-full flex flex-col items-center">
-        <nav className="w-full flex justify-center border-b border-gray-200/30 h-14 sm:h-16 bg-white/70 backdrop-blur-sm">
-          <div className="w-full max-w-4xl flex justify-between items-center p-2 px-3 sm:p-3 sm:px-5 text-xs sm:text-sm">
-            <div className="flex gap-3 sm:gap-5 items-center font-medium">
-              <Link href={"/"} className="text-feminine-text hover:text-feminine-pink transition-colors truncate">
-                <span className="block sm:hidden">エッグさん</span>
-                <span className="hidden sm:block">エッグさん名言ジェネレーター</span>
-              </Link>
-            </div>
-          </div>
-        </nav>
 
         <div className="flex-1 flex flex-col items-center justify-center max-w-4xl p-1 sm:p-2 md:p-3 lg:p-4 w-full">
           {/* メインアプリカード */}
@@ -427,15 +416,15 @@ export default function Home() {
         </div>
 
         <motion.footer 
-          className="w-full flex flex-col items-center justify-center border-t border-gray-200/30 mx-auto text-center text-xs gap-1 sm:gap-2 py-1 sm:py-2 bg-white/50 backdrop-blur-sm"
+          className="w-full flex flex-col items-center justify-center border-t border-gray-200/30 mx-auto text-center gap-3 sm:gap-4 py-6 sm:py-8 md:py-10 bg-white/50 backdrop-blur-sm"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 1 }}
         >
-          <p className="text-feminine-text/60 font-rounded text-xs">
+          <p className="text-feminine-text/60 font-rounded text-sm sm:text-base">
             © 2025 leSoleil / Eggsan · https://egg-word.vercel.app/
           </p>
-          <p className="text-feminine-text/60 font-rounded text-xs">
+          <p className="text-feminine-text/60 font-rounded text-sm sm:text-base">
             スクショして#エッグさんで投稿してね
           </p>
         </motion.footer>
