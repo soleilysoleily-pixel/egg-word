@@ -44,19 +44,56 @@ export default function Home() {
     // 5. 読点での改行（調整済み）
     formatted = formatted.replace(/([^。！？\n]{18,32}?)([、])(\s*)([^。！？\n])/g, '$1$2\n$4');
     
-    // === Phase 2: 高度禁則処理 ===
-    // 行頭禁則文字（句読点・括弧類）
-    const gyotoKinsoku = '。、！？‼⁇‥…♩♪♫♬‼⁇々〆〤）】〕｝〉》」』】〙〛›〗ゝゞ々ー・：；';
-    const gyotoKinsokuRegex = new RegExp(`\n([${gyotoKinsoku.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}])`, 'g');
-    formatted = formatted.replace(gyotoKinsokuRegex, '$1\n');
+    // === Phase 2: 高度禁則処理（修正版） ===
+    // 行頭に来てはいけない文字を前の行末に移動
+    const kinsokuChars = ['。', '、', '！', '？', '‼', '⁇', '‥', '…', '々', '〆', '）', '】', '〕', '｝', '〉', '》', '」', '』', '〙', '〛', '〗', 'ゝ', 'ゞ', 'ー', '・', '：', '；'];
     
-    // 行末禁則文字（開き括弧類）
-    const gyomatsuKinsoku = '（【〔｛〈《「『〖〘〚‹〓';
-    const gyomatsuKinsokuRegex = new RegExp(`([${gyomatsuKinsoku.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}])\\n`, 'g');
-    formatted = formatted.replace(gyomatsuKinsokuRegex, '\n$1');
+    // 改行後に禁則文字がある場合、前の行に移動
+    for (const char of kinsokuChars) {
+      // エスケープ処理
+      const escapedChar = char.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const regex = new RegExp(`(.)\n(${escapedChar})`, 'g');
+      formatted = formatted.replace(regex, '$1$2\n');
+    }
     
-    // === Phase 3: 追い込み処理 ===
+    // 行末に来てはいけない文字を次の行に移動
+    const gyomatsuKinsoku = ['（', '【', '〔', '｛', '〈', '《', '「', '『', '〖', '〘', '〚', '〓'];
+    for (const char of gyomatsuKinsoku) {
+      const escapedChar = char.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const regex = new RegExp(`(${escapedChar})\n`, 'g');
+      formatted = formatted.replace(regex, '\n$1');
+    }
+    
+    // === Phase 3: 追い込み処理 + スマホ禁則強化 ===
     let lines = formatted.split('\n').map(line => line.trim());
+    
+    // まず行頭禁則文字の処理（確実に実行）
+    for (let i = 1; i < lines.length; i++) {
+      const currentLine = lines[i];
+      const prevLine = lines[i - 1];
+      
+      // 行頭が禁則文字で始まる場合、前の行に統合
+      if (currentLine.match(/^[。、！？‼⁇‥…々〆）】〕｝〉》」』〙〛〗ゝゞー・：；]/)) {
+        // スマホ対応：統合後が40文字以内なら統合実行
+        if (prevLine.length + currentLine.length <= 40) {
+          lines[i - 1] = prevLine + currentLine;
+          lines.splice(i, 1);
+          i--; // インデックス調整
+        } else {
+          // 統合できない場合、禁則文字1文字だけを前の行に移動
+          const firstChar = currentLine.charAt(0);
+          const remainingText = currentLine.substring(1);
+          if (remainingText.length > 0) {
+            lines[i - 1] = prevLine + firstChar;
+            lines[i] = remainingText;
+          } else {
+            lines[i - 1] = prevLine + currentLine;
+            lines.splice(i, 1);
+            i--;
+          }
+        }
+      }
+    }
     
     // 短い行を前の行に統合（追い込み）
     for (let i = lines.length - 1; i >= 1; i--) {
@@ -134,9 +171,29 @@ export default function Home() {
       }
     }
     
-    // === Phase 5: 最終調整 ===
+    // === Phase 5: 最終調整・禁則確認 ===
     // 空行除去
     lines = lines.filter(line => line.length > 0);
+    
+    // 最終的な禁則処理の確認（保険処理）
+    for (let i = 1; i < lines.length; i++) {
+      const currentLine = lines[i];
+      if (currentLine.match(/^[。、！？]/)) {
+        const prevLine = lines[i - 1];
+        // 1文字だけ移動できる場合
+        if (prevLine.length + 1 <= 35) {
+          const firstChar = currentLine.charAt(0);
+          const remainingText = currentLine.substring(1);
+          lines[i - 1] = prevLine + firstChar;
+          if (remainingText.length > 0) {
+            lines[i] = remainingText;
+          } else {
+            lines.splice(i, 1);
+            i--;
+          }
+        }
+      }
+    }
     
     return lines.join('\n');
   };
